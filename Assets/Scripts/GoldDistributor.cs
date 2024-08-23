@@ -383,7 +383,6 @@ public class GoldDistributor : MonoBehaviour, TravelingIndicatorIO
 
         _storedGold += (int)TI.value;
         AudioController.inst.PlaySound(AudioController.inst.CollectGold, 0.88f, 1.0f);
-
         UpdateGoldStoredText(); 
     }
 

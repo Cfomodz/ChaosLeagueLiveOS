@@ -564,11 +564,11 @@ public class TwitchClient : MonoBehaviour
             case 5: //AltKeyHer3
                 return Color.HSVToRGB(0.052f, 0.8f, 0.58f);
 
-            case 6: //Andre_601
-                return Color.HSVToRGB(0f, 0f, 0.1804f);
-
-            case 7: //InferShock
+            case 6: //InferShock
                 return Color.HSVToRGB(0f, 0f, 0.251f);
+
+            case 7: //Andre_601
+                return Color.HSVToRGB(0f, 0f, 0.1804f);
 
         }
 
@@ -595,11 +595,11 @@ public class TwitchClient : MonoBehaviour
             case 5: //AltKeyHer3
                 return Color.HSVToRGB(0.052f, 0.8f, 0.58f);
 
-            case 6: //Andre_601
-                return Color.HSVToRGB(0f, 0f, 1f);
-
-            case 7: //InferShock
+            case 6: //InferShock
                 return Color.HSVToRGB(0f, 1f, 1f);
+
+            case 7: //Andre_601
+                return Color.HSVToRGB(0f, 0f, 1f);
         }
 
         return Color.HSVToRGB(0.052f, 0.8f, 0.58f);
@@ -635,6 +635,7 @@ public class TwitchClient : MonoBehaviour
         {
             VIPTrail(ph, 2);
             VIPTextbox(ph, 2);
+            VIPCrownA(ph, 2);
         }
 
         if (commandKey.StartsWith("!thiscouldbeacustomcommandforaviptrailbutnoonewilleverreallyknow"))
@@ -685,6 +686,7 @@ public class TwitchClient : MonoBehaviour
         if (commandKey.StartsWith("!vipinfer"))
         {
             VIPTrail(ph, 6);
+            VIPTextbox(ph, 6);
         }
 
         if (commandKey.StartsWith("!infertrail"))
@@ -700,6 +702,7 @@ public class TwitchClient : MonoBehaviour
         if (commandKey.StartsWith("!vipandre"))
         {
             VIPTrail(ph, 7);
+            VIPTextbox(ph, 7);
         }
 
         if (commandKey.StartsWith("!andretrail"))
@@ -827,6 +830,7 @@ public class TwitchClient : MonoBehaviour
                 break;
         }
 
+        ph.pp.EnhancedCrown = false;
         ph.pp.CrownJSON = cheese;
         //_gm._kingController._crown.UpdateCustomizations(CrownSerializer.GetColorListFromJSON(cheese));
     }
@@ -937,7 +941,8 @@ public class TwitchClient : MonoBehaviour
                     _tileController.GameplayTile.NewSponsor(ph, ph.pp.TwitchUsername);
                     _tileController.GameplayTile._indicator4.gameObject.SetActive(false);
                     _tileController.GameplayTile._indicator5.gameObject.SetActive(false);
-                    ReplyToPlayer(messageId, ph.pp.TwitchUsername, "Sponsorship Successful! Thank you!");
+                    Debug.Log($"Sponsorship of {_tileController.GameplayTile.CurrentSide.ToString()} tile Successful! Thank you!");
+                    ReplyToPlayer(messageId, ph.pp.TwitchUsername, $"Sponsorship of {_tileController.GameplayTile.CurrentSide.ToString()} tile Successful! Thank you!");
                 }
             }
             else
@@ -960,7 +965,8 @@ public class TwitchClient : MonoBehaviour
                     _tileController.CurrentBiddingTile.NewSponsor(ph, ph.pp.TwitchUsername);
                     _tileController.CurrentBiddingTile._indicator4.gameObject.SetActive(false);
                     _tileController.CurrentBiddingTile._indicator5.gameObject.SetActive(false);
-                    ReplyToPlayer(messageId, ph.pp.TwitchUsername, "Sponsorship Successful! Thank you!");
+                    Debug.Log($"Sponsorship of {_tileController.CurrentBiddingTile.CurrentSide.ToString()} tile Successful! Thank you!");
+                    ReplyToPlayer(messageId, ph.pp.TwitchUsername, $"Sponsorship of {_tileController.CurrentBiddingTile.CurrentSide.ToString()} tile Successful! Thank you!");
                 }
             }
 

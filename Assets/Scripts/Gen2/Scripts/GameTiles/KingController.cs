@@ -164,7 +164,7 @@ public class KingController : MonoBehaviour, TravelingIndicatorIO
         // Handles Playing VIP Songs
         switch (newKingUsername)
         {
-            case "LXTRoach":
+            case "lxtroach":
                 AudioController.inst.PlaySound(AudioController.inst.RoachVIP, 0.95f, 1.05f);
                 break;
         }
