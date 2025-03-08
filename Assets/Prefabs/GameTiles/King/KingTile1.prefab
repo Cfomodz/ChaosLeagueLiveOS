@@ -275,7 +275,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6870175149915391139
 Transform:
   m_ObjectHideFlags: 0
@@ -777,6 +777,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _collision2DDetection: 1
   _trigger2DDetection: 0
+  _collisionStayDetection: 0
   OnPbDetected:
     m_PersistentCalls:
       m_Calls: []
@@ -1383,6 +1384,7 @@ MonoBehaviour:
   _brickPrefab: {fileID: 5475878263958988141, guid: 11150fd0d42902144b6bae19c0971c81, type: 3}
   _bottomLeftCorner: {fileID: 8004017922189862606}
   _topRightCorner: {fileID: 6604688041955380971}
+  _goldDistributor: {fileID: 0}
   _mode: 1
   _rows: 5
   _columns: 10
@@ -1798,12 +1800,27 @@ MonoBehaviour:
   _tollRateText: {fileID: 0}
   _autoPredictions: {fileID: 0}
   _liveViewCount: {fileID: 0}
+  _crown: {fileID: 0}
+  _myCameraController: {fileID: 0}
+  _KingTile: {fileID: 0}
   _kingPointsText: {fileID: 0}
   _kingGoldText: {fileID: 0}
+  _kingSapphireText: {fileID: 0}
+  _kingEmeraldText: {fileID: 0}
+  _kingDiamondText: {fileID: 0}
+  _kingRubyText: {fileID: 0}
   _defaultDefenseV2: {fileID: 4856491194004978475}
   _newKingBlockade: {fileID: 0}
   _newKingBlockadeTimer: {fileID: 0}
+  _throneTileTrim: {fileID: 0}
+  _enableNewKingBlockade: 1
+  _baseMaterial: {fileID: 0}
+  T1Materials: []
+  T2Materials: []
+  T3Materials: []
   TollRate: 0
+  timer: 0
+  duration: 300
 --- !u!1 &5778962435939255866
 GameObject:
   m_ObjectHideFlags: 0
@@ -2164,7 +2181,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8796690236179040847
 Transform:
   m_ObjectHideFlags: 0

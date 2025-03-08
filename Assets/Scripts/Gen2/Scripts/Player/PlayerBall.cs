@@ -387,17 +387,39 @@ public class PlayerBall : MonoBehaviour
 
     public void PayToll(int tollRate)
     {
-        if (tollRate > 0)
+        if (RebellionController.RoyalCelebration)
         {
-            long payment = tollRate;
-            if (Ph.pp.SessionScore < tollRate)
-                payment = Ph.pp.SessionScore;
+            if (tollRate > 0)
+            {
+                long payment = tollRate;
 
-            if (payment <= 0)
-                return;
+                Ph.pp.Gold += tollRate;
 
-            Ph.SubtractPoints(payment, false, true);
-            TextPopupMaster.Inst.CreateTravelingIndicator(payment.ToString(), payment, Ph, Ph.GetGameManager().GetKingController().currentKing.Ph, 0.1f, Color.red, null);
+                TextPopupMaster.Inst.CreateTravelingIndicator(payment.ToString(), payment, Ph.GetGameManager().GetKingController().currentKing.Ph, Ph, 0.1f, Color.yellow, null);
+            }            
+        }
+        else
+        {
+            if (tollRate > 0)
+            {
+                long payment = tollRate;
+                if (Ph.pp.SessionScore < tollRate)
+                    payment = Ph.pp.SessionScore;
+
+                if (payment <= 0)
+                    return;
+
+                Ph.SubtractPoints(payment, false, true);
+                TextPopupMaster.Inst.CreateTravelingIndicator(payment.ToString(), payment, Ph, Ph.GetGameManager().GetKingController().currentKing.Ph, 0.1f, Color.red, null);
+            }
+            else if (tollRate < 0)
+            {
+                long payment = tollRate * -1;
+
+                Ph.pp.Gold -= tollRate;
+
+                TextPopupMaster.Inst.CreateTravelingIndicator(payment.ToString(), payment, Ph.GetGameManager().GetKingController().currentKing.Ph, Ph, 0.1f, Color.white, null);
+            }
         }
     }
 

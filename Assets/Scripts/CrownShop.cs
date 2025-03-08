@@ -9,6 +9,8 @@ public class CrownShop : Game
 
     [SerializeField] private int _buyTime = 30;
 
+    private NPCHandler _npcHandler;
+
     public override void OnTilePreInit()
     {
         _entries[0].InitEntry(1, (_gt.IsGolden) ? 66_000 : 100_000);
@@ -29,6 +31,8 @@ public class CrownShop : Game
 
         foreach (var entry in _entries)
             entry.ShowCommandText();
+
+        _gt.BuyingActive = true;
     }
 
     public IEnumerator KillAllAfterDelay(int secDelay)

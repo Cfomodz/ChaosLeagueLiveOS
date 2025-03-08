@@ -1,5 +1,4 @@
-﻿
-using Amazon.Runtime.Internal.Endpoints.StandardLibrary;
+﻿using Amazon.Runtime.Internal.Endpoints.StandardLibrary;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,6 +57,9 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
     private float _receiveGoldTimer = 0;
     private long _receiveGoldAccumulator = 0; 
 
+    //                                  rewardID, redemptionsIds List
+    [HideInInspector] public Dictionary<string, List<string>> redemptionsIds = new Dictionary<string, List<string>>();
+
     public IEnumerator CInitPlayerHandler(GameManager gm, string twitchID)
     {
         _gm = gm;
@@ -88,10 +90,13 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
     }
     public bool IsKing()
     {
+        _gm.ChangeHue();
+
         if (State == PlayerHandlerState.King)
             return true;
-        return false;
+        return false;        
     }
+    
     public void SetRankScore(int score)
     {
         RankScore = score;
@@ -115,6 +120,8 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
         pp.CurrentBid += amount;
         if (pb != null)
             pb.UpdateBidCountText();
+
+        _gm.ChangeHue();
     }
 
     public void DecrementBid(int amount) 
@@ -124,13 +131,32 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
             pp.CurrentBid = 0;
         if (pb != null)
             pb.UpdateBidCountText();
+
+        _gm.ChangeHue();
     }
+
+    public void CheckAuto(int bids, int skips)
+    {
+        if (bids == 0)
+            pp.CurrentBid = 0;
+        else if (!IsKing() && skips == 0)
+        {
+            pp.CurrentBid = 1;
+            pp.AutoBidRemainder -= 1;
+        }
+
+        if (pb != null)
+            pb.UpdateBidCountText();
+    } 
 
 
     public void ResetBid()
     {
-        pp.CurrentBid = 0; 
-        if(pb != null)
+        pp.CurrentBid = 0;
+
+        _gm.ChangeHue();
+
+        if (pb != null)
             pb.UpdateBidCountText();
     }
 
@@ -221,7 +247,7 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
                 return;
             }
             //Send the invite bonus
-            StartCoroutine(CheckBonusToInviter(_receiveGoldAccumulator)); 
+            StartCoroutine(CheckBonusToInviterGold(_receiveGoldAccumulator)); 
             _receiveGoldAccumulator = 0; 
         }
     }
@@ -369,12 +395,16 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
         {
             pb._trailRenderer.enabled = true;
             pb._trailRenderer.colorGradient = TrailGradient;
+            if (TrailGradient.colorKeys.Length >= 5)
+                pb._trailRenderer.time = 1.25f;
+            if (TrailGradient.colorKeys.Length >= 4)
+                pb._trailRenderer.time = 1f;
             if (TrailGradient.colorKeys.Length >= 3)
-                pb._trailRenderer.time = AppConfig.inst.GetF("TrailTierThreeTime");
+                pb._trailRenderer.time = 0.75f;
             else if (TrailGradient.colorKeys.Length >= 2)
-                pb._trailRenderer.time = AppConfig.inst.GetF("TrailTierTwoTime");
+                pb._trailRenderer.time = 0.5f;
             else
-                pb._trailRenderer.time = AppConfig.inst.GetF("TrailTierOneTime");
+                pb._trailRenderer.time = 0.25f;
 
         }
     }
@@ -385,6 +415,8 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
     }
     public void ZeroPoints(bool kill, bool createTextPopup, Vector3 textPopupDirection, bool contributeToROI = true)
     {
+
+        _gm.ChangeHue();
 
         if (createTextPopup)
             TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), textPopupDirection, "-" + MyUtil.AbbreviateNum4Char(pp.SessionScore), Color.red);
@@ -402,6 +434,18 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
         if (kill)
             pb.ExplodeBall();
 
+    }
+    public void TomatoPoints(long amount, bool canKill, bool createTextPopup, bool contributeToROI = true)
+    {
+        if (pp.ShieldValue > (int)amount)
+            pp.ShieldValue -= (int)amount;
+        else
+        {
+            amount -= pp.ShieldValue;
+            pp.ShieldValue = 0;
+            SubtractPoints(amount, canKill, createTextPopup, Vector2.up, contributeToROI);
+        }                  
+        
     }
     public void SubtractPoints(long amount, bool canKill, bool createTextPopup, bool contributeToROI = true)
     {
@@ -426,6 +470,8 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
             }
         }
 
+        _gm.ChangeHue();
+
         UpdateBallPointsText();
 
         if (pb == null && !pbh.gameObject.activeSelf)
@@ -436,7 +482,162 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
             TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), textPopupDirection, "-" + MyUtil.AbbreviateNum4Char(amount), Color.red);
 
     }
-    public void AddGold(int amount, bool createTextPopup, bool doInviteBonus)
+    public void AddCurrency(int amount, string currencyType)
+    {
+        Debug.Log($"{amount} {currencyType}");
+
+        if (currencyType == "Sapphire")
+        {
+            pp.Sapphires += amount;
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.up, "+" + MyUtil.AbbreviateNum4Char(amount), Color.blue);
+            Debug.Log($"Sapphires {amount}");
+        }
+        else if (currencyType == "Emerald")
+        {
+            pp.Emeralds += amount;
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.up, "+" + MyUtil.AbbreviateNum4Char(amount), Color.green);
+            Debug.Log($"Emeralds {amount}");
+        }
+        else if (currencyType == "Diamond")
+        {
+            pp.Diamonds += amount;
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.up, "+" + MyUtil.AbbreviateNum4Char(amount), Color.cyan);
+            Debug.Log($"Diamonds {amount}");
+        }
+        else if (currencyType == "Gold")
+        {
+            pp.Gold += amount * 1000000;
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.up, "+" + MyUtil.AbbreviateNum4Char(amount), Color.yellow);
+            Debug.Log($"Diamonds {amount}");
+        }
+
+        if (State == PlayerHandlerState.King)
+            _gm.GetKingController().UpdateGoldText();
+
+        AudioController.inst.PlaySound(AudioController.inst.CollectGold, 0.95f, 1.05f);
+    }
+
+    public void AddItems(int amount, string itemType)
+    {
+        Debug.Log($"{amount} {itemType}");
+
+        if (itemType == "Shield")
+        {
+            pp.ShieldValue += amount * 100000;
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.up, "+" + MyUtil.AbbreviateNum4Char(amount), Color.cyan);
+            Debug.Log($"Shields {amount}");
+        }
+        else if (itemType == "RiskSkip")
+        {
+            pp.RiskSkips += amount;
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.up, "+" + MyUtil.AbbreviateNum4Char(amount), Color.black);
+            Debug.Log($"RiskSkips {amount}");
+        }        
+
+        if (State == PlayerHandlerState.King)
+            _gm.GetKingController().UpdateGoldText();
+
+        AudioController.inst.PlaySound(AudioController.inst.CollectGold, 0.95f, 1.05f);
+    }
+
+    public void SellCurrency(long amount, string currencyType)
+    {
+        Debug.Log($"{amount} {currencyType}");
+
+        if (currencyType == "Sapphire")
+        {
+            pp.SessionScore += (amount * 970000);
+            pp.Sapphires -= (int)amount;
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.up, "+" + MyUtil.AbbreviateNum4Char(amount), Color.white);            
+            Debug.Log($"Sapphires {amount}");
+        }
+        else if (currencyType == "Emerald")
+        {
+            pp.Sapphires += (amount * 970000);
+            pp.Emeralds -= (int)amount;
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.up, "+" + MyUtil.AbbreviateNum4Char(amount), Color.blue);
+            Debug.Log($"Emeralds {amount}");
+        }
+        else if (currencyType == "Diamond")
+        {
+            pp.Emeralds += (amount * 970000);
+            pp.Diamonds -= (int)amount;
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.up, "+" + MyUtil.AbbreviateNum4Char(amount), Color.green);
+            Debug.Log($"Diamonds {amount}");
+        }
+        else if (currencyType == "Quad")
+        {
+            pp.SessionScore += 970000000000000;
+            pp.Emeralds -= (int)1000;
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.up, "+" + MyUtil.AbbreviateNum4Char(amount), Color.green);
+            Debug.Log($"Quad {amount}");
+        }
+
+        if (State == PlayerHandlerState.King)
+            _gm.GetKingController().UpdateGoldText();
+
+        AudioController.inst.PlaySound(AudioController.inst.CollectGold, 0.95f, 1.05f);
+    }
+
+    public void TradeUp()
+    {
+        long score = pp.SessionScore;
+        long sapphires = pp.Sapphires;
+        long emeralds = pp.Emeralds;
+        long diamonds = pp.Diamonds;
+        long rubies = pp.Rubies;
+        bool stillTrading = false;
+        AudioController.inst.PlaySound(AudioController.inst.TradeUp, 0.95f, 1.05f);
+
+        stillTrading = false;
+        while (score >= 1000000000000)
+        {
+            score -= 1000000000000;
+            emeralds += 1;
+            stillTrading = true;
+        }
+        while (score >= 1000000)
+        {
+            score -= 1000000;
+            sapphires += 1;
+            stillTrading = true;
+        }
+
+        while (sapphires >= 1000000)
+        {
+            sapphires -= 1000000;
+            emeralds += 1;
+            stillTrading = true;
+        }
+
+        while (emeralds >= 1000000)
+        {
+            emeralds -= 1000000;
+            diamonds += 1;
+            stillTrading = true;
+        }
+
+        while (diamonds >= 1000000)
+        {
+            diamonds -= 1000000;
+            rubies += 1;
+            stillTrading = true;
+        }
+
+
+        pp.SessionScore = score;
+        pp.Sapphires = sapphires;
+        pp.Emeralds = emeralds;
+        pp.Diamonds = diamonds;
+        pp.Rubies = rubies;
+
+        UpdateBallPointsText();
+
+        if (State == PlayerHandlerState.King)
+            _gm.GetKingController().UpdateGoldText();
+    }
+
+    public void AddGold(long amount, bool createTextPopup, bool doInviteBonus)
     {
         pp.Gold += amount;
 
@@ -447,6 +648,7 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
             _receiveGoldTimer = 1.5f;
         }
 
+        _gm.ChangeHue();
 
         if (State == PlayerHandlerState.King)
             _gm.GetKingController().UpdateGoldText();
@@ -455,7 +657,7 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
         if (createTextPopup)
             TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.up, "+" + MyUtil.AbbreviateNum4Char(amount), MyColors.Gold);
     }
-    public void SubtractGold(int amount, bool createTextPopup)
+    public void SubtractGold(long amount, bool createTextPopup)
     {
         pp.Gold -= amount;
         if (pp.Gold <= 0)
@@ -473,10 +675,27 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
     }
     public void AddPoints(long points, bool createTextPopup, Vector3 textPopupDirection,  bool contributeToROI = true, bool doInviteBonus = true)
     {
+        if (points > (long)5000000000000000000)
+        {
+            points = (long)5000000000000000000;
+        }            
+        
+        if ((ulong)points > (ulong)5000000000000000000 - (ulong)pp.SessionScore)
+            TradeUp();
+
         pp.SessionScore += points;
 
-        //if (doInviteBonus)
-        //    StartCoroutine(CheckBonusToInviter(points));
+        _gm.ChangeHue();
+
+        if (pp.SessionScore > 1000000000000000)
+        {
+            pp.SessionScore -= 1000000000000000;
+            pp.Emeralds += 1000;
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.right, "+1K Emeralds", Color.green);
+        }
+
+        if (doInviteBonus)
+            StartCoroutine(CheckBonusToInviterPoints(points));
         if (contributeToROI)
             TilePointsROI += points;
 
@@ -486,12 +705,126 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
             return;
 
         if (createTextPopup)
-            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), textPopupDirection, "+" + MyUtil.AbbreviateNum4Char(points), Color.yellow);
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), textPopupDirection, "+" + MyUtil.AbbreviateNum4Char(points), Color.white);
 
         int combo = AddCombo();
         float comboPitch = Mathf.Lerp(0.8f, 1.2f, Mathf.Clamp01((float)combo / 15f));
         AudioController.inst.PlaySound(AudioController.inst.AddPoints, comboPitch, comboPitch);
 
+        if (pp.SessionScore < 0)
+            pp.SessionScore = 0;
+
+    }
+
+    public void AddGems(long value, bool createTextPopup, Vector3 textPopupDirection, string type)
+    {
+
+        switch (type)
+        {
+            case "Sapphire":
+                pp.Sapphires += value;
+                TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.right, $"+{value} Sapphire", Color.blue);
+                break;
+            case "Emerald":
+                pp.Emeralds += value;
+                TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.right, $"+{value} Emerald", Color.green);
+                break;
+            case "Diamond":
+                pp.Diamonds += value;
+                TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.right, $"+{value} Diamond", Color.cyan);
+                break;
+            case "Ruby":
+                pp.Rubies += value;
+                TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.right, $"+{value} Ruby", Color.red);
+                break;
+            case "Gold":
+                pp.Gold += value;
+                TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.right, $"+{value} Gold", Color.yellow);
+                break;
+        }        
+
+        _gm.ChangeHue();
+
+        UpdateBallPointsText();
+
+        if (pb == null && !pbh.gameObject.activeSelf)
+            return;
+       
+        int combo = AddCombo();
+        float comboPitch = Mathf.Lerp(0.8f, 1.2f, Mathf.Clamp01((float)combo / 15f));
+        AudioController.inst.PlaySound(AudioController.inst.AddPoints, comboPitch, comboPitch);
+
+        if (pp.SessionScore < 0)
+            pp.SessionScore = 0;
+
+    }
+        
+
+    public void ReloadKingCosmetics(int AnimationMode)
+    {
+        var Txtr1 = pp.CrownTexture1;
+        var Txtr2 = pp.CrownTexture2;
+        var BGT = pp.KingBGTier;
+        var BG = pp.KingBG;
+
+        var BaseMaterials = _gm._kingController._crown._crownMeshRenderer.materials;
+        var DesiredMaterials = _gm._kingController._crown.EnhancedMaterials;
+        var BGMaterials = _gm._kingController._KingTile._background.materials;
+
+        switch (AnimationMode)
+        {
+            case 0:
+                _gm._kingController._KingTile.RarityType = RarityType.Common;
+                _gm._kingController._KingTile.HasBackground = false;
+                break;
+            case 1:
+                _gm._kingController._KingTile.RarityType = RarityType.CommonPlus;
+                _gm._kingController._KingTile.HasBackground = true;
+                break;
+        }
+
+
+        if (pp.EnhancedCrown == false)
+        {
+            Txtr1 = 0;
+            Txtr2 = 1;
+        }
+
+        BaseMaterials[0] = DesiredMaterials[Txtr1];
+        BaseMaterials[1] = DesiredMaterials[Txtr2];
+
+        _gm._kingController._crown._crownMeshRenderer.materials = BaseMaterials;
+
+        if (pb.Ph.pp.EnhancedCrown == false)
+            _gm._kingController._crown.UpdateCustomizations(CrownSerializer.GetColorListFromJSON(pb.Ph.pp.CrownJSON));
+        else
+            _gm._kingController._crown.EnhancedCustomizations(pb.Ph.pp.CrownTier, true, pb.Ph.pp.CrownTexture1);
+
+        switch (BGT)
+        {
+            case 1:
+                BGMaterials[0] = _gm._kingController.T1Materials[BG];
+                _gm._kingController._KingTile.RarityType = RarityType.Common;
+                _gm._kingController._KingTile.HasBackground = false;
+                break;
+            case 2:
+                BGMaterials[0] = _gm._kingController.T2Materials[BG];
+                _gm._kingController._KingTile.RarityType = RarityType.Common;
+                _gm._kingController._KingTile.HasBackground = false;
+                break;
+            case 3:
+                BGMaterials[0] = _gm._kingController.T3Materials[BG];
+                _gm._kingController._KingTile.RarityType = RarityType.CommonPlus;
+                _gm._kingController._KingTile.HasBackground = true;
+                break;
+            default:
+                BGMaterials[0] = _gm._kingController._baseMaterial;
+                _gm._kingController._KingTile.RarityType = RarityType.Common;
+                _gm._kingController._KingTile.HasBackground = false;
+                break;
+        }
+
+        _gm._kingController._KingTile._background.materials = BGMaterials;
     }
 
     private int AddCombo()
@@ -503,13 +836,21 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
     public void MultiplyPoints(float multiplier, bool createTextPopup, Vector3 textPopupDirection, bool contributeToROI = true, bool doInviteBonus = true)
     {
         long prevScore = pp.SessionScore;
-        pp.SessionScore = (long)(pp.SessionScore * multiplier);
+
+        if ((ulong)prevScore * (ulong)multiplier > (ulong)5000000000000000000)
+        {
+            pp.SessionScore = 0;
+            pp.Diamonds += 5;
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.right, "+5 Diamonds", Color.cyan);
+        }
+        else
+            pp.SessionScore = (long)(pp.SessionScore * multiplier);
 
         if (contributeToROI)
             TilePointsROI += (pp.SessionScore - prevScore);
 
-        //if(doInviteBonus)
-        //    StartCoroutine(CheckBonusToInviter(pp.SessionScore - prevScore));
+        if(doInviteBonus)
+            StartCoroutine(CheckBonusToInviterPoints(pp.SessionScore - prevScore));
 
         UpdateBallPointsText();
 
@@ -523,6 +864,12 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
         float comboPitch = Mathf.Lerp(0.8f, 1.5f, Mathf.Clamp01((float)combo / 5f));
         AudioController.inst.PlaySound(AudioController.inst.MultiplyPoints, comboPitch, comboPitch);
 
+        if (pp.SessionScore < 0 && multiplier > 0)
+        {
+            pp.SessionScore = 0;
+            pp.Emeralds += 5000;
+            TextPopupMaster.Inst.CreateTextPopup(Get_TI_IO_Position(), Vector3.right, "+5K Emeralds", Color.green);
+        }
     }
 
     public void DividePoints(float divideAmount, bool textPopup, bool contributeToROI = true)
@@ -533,6 +880,9 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
     {
         long scoreBefore = pp.SessionScore; 
         pp.SessionScore = (long)(pp.SessionScore / divideAmount);
+
+        if (pp.SessionScore < 0)
+            pp.SessionScore = 0;
 
         if (contributeToROI)
             TilePointsROI += (pp.SessionScore - scoreBefore); 
@@ -578,13 +928,13 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
 
         if (TI.TI_Type == TI_Type.GiveGold)
         {
-            AddGold((int)TI.value, true, doInviteBonus:false); 
+            AddGold(TI.value, true, doInviteBonus:false); 
             return;
         }
 
         if (TI.TI_Type == TI_Type.GiveGoldDoBonus)
         {
-            AddGold((int)TI.value, true, doInviteBonus: true);
+            AddGold(TI.value, true, doInviteBonus: true);
             return;
         }
 
@@ -606,7 +956,7 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
             }
 
 
-            SubtractPoints(TI.value, false, true, contributeToROI:false);
+            TomatoPoints(TI.value, false, true, contributeToROI:false);
             return;
         }
 
@@ -623,7 +973,7 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
         }
     }
 
-/*    private IEnumerator CheckBonusToInviter(long amount)
+    private IEnumerator CheckBonusToInviterPoints(long amount)
     {
         if (string.IsNullOrEmpty(pp.InvitedByID))
             yield break;
@@ -645,9 +995,9 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
         }
 
         TextPopupMaster.Inst.CreateTravelingIndicator($"Invite Bonus +{MyUtil.AbbreviateNum4Char(bonus)}", bonus, this, inviterPh, 0.1f, Color.cyan, inviterPh.PfpTexture); 
-    }*/
+    }
 
-    private IEnumerator CheckBonusToInviter(long goldAmount)
+    private IEnumerator CheckBonusToInviterGold(long goldAmount)
     {
         if (string.IsNullOrEmpty(pp.InvitedByID))
             yield break;
@@ -733,7 +1083,7 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
         }
 
         //Debug.Log($"{inviter.pp.TwitchUsername} Successfully adding invite {pp.TwitchUsername}");
-        twitchClient.PingReplyPlayer(inviter.pp.TwitchUsername, $"You successfully invited @{pp.TwitchUsername} using your !invite link. You will now earn 25% of all gold they earn!");
+        twitchClient.PingReplyPlayer(inviter.pp.TwitchUsername, $"You successfully invited @{pp.TwitchUsername} using your !invite link. You will now earn 50% of all points, and 25% of all gold they earn!");
         inviter.pp.AddInvite(pp.TwitchID);
         pp.InvitedByID = inviter.pp.TwitchID;
         pp.LastInteraction = DateTime.Now;
@@ -757,12 +1107,18 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
         int goldenMultiplier = 0; 
 
         TileController tc = _gm.GetTileController();
+        if (this.State != PlayerHandlerState.Gameplay && tc.CurrentBiddingTile.IsRuby)
+            goldenMultiplier += 50;
+        //Or if the player is in gameplay on a ruby tile, and they receive a bid, multiply it by 50
+        else if (this.State == PlayerHandlerState.Gameplay && tc.GameplayTile != null && tc.GameplayTile.IsRuby)
+            goldenMultiplier += 50;
         //If the player is in the bidding Q, and the bidding Q is bidding on a golden tile, then multiply the ticket redemption
-        if (this.State != PlayerHandlerState.Gameplay && tc.CurrentBiddingTile.IsGolden)
-            goldenMultiplier += AppConfig.inst.GetI("GoldenTileMultiplier");
-        //Or if the player is in gameplay on a golden tile, and they receive a bid, multiply it by 100
+        else if (this.State != PlayerHandlerState.Gameplay && tc.CurrentBiddingTile.IsGolden)
+            goldenMultiplier += 10;
+        //Or if the player is in gameplay on a golden tile, and they receive a bid, multiply it by 10
         else if (this.State == PlayerHandlerState.Gameplay && tc.GameplayTile != null && tc.GameplayTile.IsGolden)
-            goldenMultiplier += AppConfig.inst.GetI("GoldenTileMultiplier");
+            goldenMultiplier += 10;
+        
 
         int zoneMultiplier = GetZoneMultiplierTotal();
 
@@ -845,12 +1201,17 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
         return total;
     }
 
-    public void ThrowTomato(long desiredTomatoAmount, PlayerHandler targetPlayer)
+    public void ThrowTomato(long desiredTomatoAmount, PlayerHandler targetPlayer, bool hastomato)
     {
         //If the user tries to use more points than they have, just clamp it
         if (pp.SessionScore < desiredTomatoAmount)
             desiredTomatoAmount = pp.SessionScore;
 
+        if (hastomato) 
+        {
+            pp.TomatoCount--;
+            hastomato = false;
+        }
         //Apply kickback force to player proportional to the amount of points they threw compared to how many points they have
         if(pb != null && pb._rb2D.gameObject.activeSelf)
         {
@@ -866,6 +1227,7 @@ public class PlayerHandler : MonoBehaviour, TravelingIndicatorIO, TI_Bid_IO
         float t = EasingFunction.EaseOutExpo(0, 1, desiredTomatoAmount / 10_000f);
         Vector3 tomatoScale = Vector3.Lerp(new Vector3(0.3f, 0.3f, 0.3f), new Vector3(1.3f, 1.3f, 1.3f), t);
 
+        
         TextPopupMaster.Inst.CreateTravelingIndicator("🍅", desiredTomatoAmount, Get_TI_IO_Position(), targetPlayer, 0.2f, tomatoScale, Color.green, null, true, ti_type: TI_Type.Tomato);
 
 

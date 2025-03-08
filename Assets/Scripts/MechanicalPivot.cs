@@ -13,7 +13,7 @@ public class MechanicalPivot : MonoBehaviour, IResetable
     public enum PivotMode { FlipFlop, HoldAndReturn};
 
     [SerializeField] private PivotMode pivotMode = PivotMode.FlipFlop;
-    [SerializeField] private float _holdDuration = 0;
+//    [SerializeField] private float _holdDuration = 0;
 
     [SerializeField] private float _rotateSpeed = 1;
 

@@ -24,7 +24,7 @@ public class SuperCapsule : MonoBehaviour
 
     private int _tilesRemaining; 
 
-    public void Init(RebellionController scm,
+    public void InitRebellion(RebellionController scm,
         PlayerHandler ph,
         Texture pfp,
         MultiplierZone zone,
@@ -73,10 +73,64 @@ public class SuperCapsule : MonoBehaviour
         //StartCoroutine(RunTimer(durationS));
     }
 
+    public void InitRoyalCelebration(RebellionController scm,
+        PlayerHandler ph,
+        Texture pfp,
+        MultiplierZone zone,
+        int dollarEquivalent,
+        string label,
+        Vector2 dollarColorMap,
+        Color bodyBackgroundColor,
+        Color headerBackgroundColor,
+        Color particlesColor)
+    {
+        _rm = scm;
+        Zone = zone;
+
+        Ph = ph;
+
+        DollarEquivalent = dollarEquivalent;
+        _tilesRemaining = dollarEquivalent;
+
+        _materialPropertyBlock = new MaterialPropertyBlock();
+
+        _pfpMeshRenderer.material.mainTexture = pfp;
+
+        if (dollarEquivalent > 49)
+            Zone.IncrementMultiplier(5);
+        else if (dollarEquivalent > 24)
+            Zone.IncrementMultiplier(3);
+        else
+            Zone.IncrementMultiplier(2);
+
+        UpdateLabel();
+
+        float t = Mathf.Clamp(dollarEquivalent, 1, dollarColorMap.y) / dollarColorMap.y;
+
+        var ps_main = _particleHype.main;
+        //Color mappedColor = _multiplierParticleMap.Evaluate(t);
+        ps_main.startColor = particlesColor;
+
+        MinMaxCurve newCurve = new MinMaxCurve();
+        newCurve.constantMin = 1;
+        newCurve.constantMax = Mathf.Lerp(1, 10, t);
+        newCurve.mode = ParticleSystemCurveMode.TwoConstants;
+        ps_main.startLifetime = newCurve;
+
+        //Zone.SetColorParams(dollarColorMap, _dollarToColor, _dollarToTextColor); 
+
+        _materialPropertyBlock.SetColor("_BodyBackgroundColor", bodyBackgroundColor);
+        _materialPropertyBlock.SetColor("_HeaderBackgroundColor", headerBackgroundColor);
+        _mainBody.SetPropertyBlock(_materialPropertyBlock);
+        _lineToSCZone.material.color = MyUtil.SetColorSaveAlpha(bodyBackgroundColor, alpha: _lineToSCZone.material.color);
+
+        //StartCoroutine(RunTimer(durationS));
+    }
+
     public IEnumerator RunSpawnAnimation(Spline path, AnimationCurve speed, Transform capsuleStackStartPos)
     {
         float duration = speed.keys[speed.keys.Length - 1].time;
-        Debug.Log("animation duration: " + duration); 
+        Debug.Log("animation duration: " + duration);
         float timer = 0;
 
         Vector3 rotateStartPos = path.Knots.ToList()[1].Position;
@@ -94,7 +148,7 @@ public class SuperCapsule : MonoBehaviour
 
             transform.position = pos;
 
-            if(transform.position.z >= rotateStartPos.z)
+            if (transform.position.z >= rotateStartPos.z)
             {
                 float percentage = (rotateStartPos.z - transform.position.z) / (rotateStartPos.z - capsuleStackStartPos.position.z);
 
@@ -119,7 +173,6 @@ public class SuperCapsule : MonoBehaviour
 
         _particleHype.Play();
     }
-
 
     private void Update()
     {

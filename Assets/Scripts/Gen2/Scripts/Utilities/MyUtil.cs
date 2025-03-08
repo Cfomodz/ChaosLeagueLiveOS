@@ -121,17 +121,29 @@ public static class MyUtil
     {
         string label = AbbreviateNum3Char((int)value);
 
-        if(effect.HasFlag(PBEffect.Add) || effect.HasFlag(PBEffect.Subtract))
-        {}
+        if (effect.HasFlag(PBEffect.Add) || effect.HasFlag(PBEffect.Subtract))
+        { }
         else if (effect.HasFlag(PBEffect.Zero))
         {
-            if(_zoneMultiplier > 0)
+            if (_zoneMultiplier > 0 && value >= 0)
                 label = "\U0001F607"; //Angel if in zone
             else
-                label = "\U0000221E"; //Infinity if not in zone
+                label = "\U0000221E"; //Infinity if not in zone And Not a Cursed Tile.
         }
         else if (effect.HasFlag(PBEffect.Multiply))
-            label = "x" + value;
+            if (value < 0)
+                label = "\U0000221E"; //Infinity if negative
+            else
+                label = "x" + value;
+        else if (effect.HasFlag(PBEffect.Divide))
+        {
+            if (value < 0)
+                label = "\U0000221E"; //Infinity if negative
+            else if (_zoneMultiplier > 0)
+                label = "\U0001F607"; //Angel if in zone            
+            else
+                label = "\U000000F7" + value; //Divide if not in zone
+        }
         else if (effect.HasFlag(PBEffect.None))
             label = ""; 
 
@@ -247,7 +259,7 @@ public static class MyUtil
 
     public static string AbbreviateNum3Char(long number)
     {
-        string[] suffixes = { "", "K", "M", "B", "t", "q", "Q", "", "" }; // You can extend this list if needed
+        string[] suffixes = { "", "K", "M", "B", "T", "q", "Q", "s", "S" }; // You can extend this list if needed
 
         //999
         if(number < 1000)
@@ -273,7 +285,7 @@ public static class MyUtil
             return $"{numString.Substring(0, 2)}{suffixes[suffixIndex]}";
 
         // 100 - 999
-        return $"0.{numString[0]}{suffixes[suffixIndex + 1]}";
+        return $"{numString.Substring(0, 3)}{suffixes[suffixIndex]}";
 
     }
 
@@ -310,7 +322,7 @@ public static class MyUtil
                 suffix = "B";
                 break;
             case 4:
-                suffix = "t";
+                suffix = "T";
                 break;
             case 5:
                 suffix = "q";
@@ -318,8 +330,11 @@ public static class MyUtil
             case 6:
                 suffix = "Q";
                 break;
+            case 7:
+                suffix = "s";
+                break;
             default:
-                suffix = ""; 
+                suffix = "S"; 
                 break;
         }
 

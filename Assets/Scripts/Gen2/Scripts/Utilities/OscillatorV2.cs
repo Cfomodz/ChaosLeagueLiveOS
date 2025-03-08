@@ -38,12 +38,15 @@ public class OscillatorV2 : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //If we're not in gameplay or bidding, don't rotate
-        if (_gt.TileState == TileState.Inactive)
-            return;
+        if (!_gt.IsKing)
+        {
+            //If we're not in gameplay or bidding, don't rotate
+            if (_gt.TileState == TileState.Inactive)
+                return;
 
-        if (!_enabled)
-            return;
+            if (!_enabled)
+                return;
+        }
 
         _timer = (_timer + Time.fixedDeltaTime) % _intervalDuration;
 

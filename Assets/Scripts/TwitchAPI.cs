@@ -356,7 +356,73 @@ public class TwitchApi : MonoBehaviour
             Debug.Log("Error while creating water custom reward.\n" + ex.Message);
         }
 
-        Debug.Log("Done creating custom rewards"); 
+        //Create custom reward to Auto-bid 10 Tiles
+        request = new CreateCustomRewardsRequest()
+        {
+            Title = $"AutoBid A - 10 Tiles",
+            Cost = 10,
+            Prompt = $"Auto-Bids 1 ticket on each of the next 10 tiles!",
+            IsEnabled = true,
+            BackgroundColor = MyUtil.ColorToHexString(_waterRewardBackgroundColor),
+            IsUserInputRequired = false,
+            IsMaxPerStreamEnabled = false,
+            IsGlobalCooldownEnabled = false,
+        };
+        try
+        {
+            var response = await _api.Helix.ChannelPoints.CreateCustomRewardsAsync(Secrets.CHANNEL_ID, request);
+            Debug.Log("Created custom Auto-Bid reward");
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("Error while creating water custom reward.\n" + ex.Message);
+        }
+
+        //Create custom reward to Auto-bid 100 Tiles
+        request = new CreateCustomRewardsRequest()
+        {
+            Title = $"AutoBid B - 100 Tiles",
+            Cost = 100,
+            Prompt = $"Auto-Bids 1 ticket on each of the next 100 tiles!",
+            IsEnabled = true,
+            BackgroundColor = MyUtil.ColorToHexString(_waterRewardBackgroundColor),
+            IsUserInputRequired = false,
+            IsMaxPerStreamEnabled = false,
+            IsGlobalCooldownEnabled = false,
+        };
+        try
+        {
+            var response = await _api.Helix.ChannelPoints.CreateCustomRewardsAsync(Secrets.CHANNEL_ID, request);
+            Debug.Log("Created custom Auto-Bid reward");
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("Error while creating water custom reward.\n" + ex.Message);
+        }
+
+        //Create custom reward to Auto-bid 1000 Tiles
+        request = new CreateCustomRewardsRequest()
+        {
+            Title = $"AutoBid C - 1000 Tiles",
+            Cost = 1000,
+            Prompt = $"Auto-Bids 1 ticket on each of the next 1000 tiles!",
+            IsEnabled = true,
+            BackgroundColor = MyUtil.ColorToHexString(_waterRewardBackgroundColor),
+            IsUserInputRequired = false,
+            IsMaxPerStreamEnabled = false,
+            IsGlobalCooldownEnabled = false,
+        };
+        try
+        {
+            var response = await _api.Helix.ChannelPoints.CreateCustomRewardsAsync(Secrets.CHANNEL_ID, request);
+            Debug.Log("Created custom Auto-Bid reward");
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("Error while creating water custom reward.\n" + ex.Message);
+        }
+
+        Debug.Log("Done creating custom rewards");
     }
 
     public async Task LoadPointRewards()

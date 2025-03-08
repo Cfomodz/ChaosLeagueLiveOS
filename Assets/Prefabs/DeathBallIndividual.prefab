@@ -291,11 +291,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshRenderer: {fileID: 8419238860014634360}
+  _meshRenderer2: {fileID: 0}
   _textLabel: {fileID: 0}
   _effect: 4
   _value: 0
   _infiniteDurability: 0
   _maxHP: 1
+  _zeroPlayerBallVelOnDetection: 0
   CurrentHP: 0
   _colorByValue: 0
   _colorMap: {fileID: 0}
@@ -339,6 +341,9 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   OverlappingZones: []
   _simulateTriggerLogic: 0
+  OnTIDetected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!33 &7713971127334422913
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -728,11 +733,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshRenderer: {fileID: 8706744468018067812}
+  _meshRenderer2: {fileID: 0}
   _textLabel: {fileID: 0}
   _effect: 4
   _value: 0
   _infiniteDurability: 0
   _maxHP: 1
+  _zeroPlayerBallVelOnDetection: 0
   CurrentHP: 0
   _colorByValue: 0
   _colorMap: {fileID: 0}
@@ -776,6 +783,9 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   OverlappingZones: []
   _simulateTriggerLogic: 0
+  OnTIDetected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!33 &2060408228651400605
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1229,11 +1239,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshRenderer: {fileID: 8409880393087886986}
+  _meshRenderer2: {fileID: 0}
   _textLabel: {fileID: 0}
   _effect: 4
   _value: 0
   _infiniteDurability: 0
   _maxHP: 1
+  _zeroPlayerBallVelOnDetection: 0
   CurrentHP: 0
   _colorByValue: 0
   _colorMap: {fileID: 0}
@@ -1277,6 +1289,9 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   OverlappingZones: []
   _simulateTriggerLogic: 0
+  OnTIDetected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!33 &2144494252177021911
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1666,11 +1681,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshRenderer: {fileID: 1424530059064364398}
+  _meshRenderer2: {fileID: 0}
   _textLabel: {fileID: 0}
   _effect: 4
   _value: 0
   _infiniteDurability: 0
   _maxHP: 1
+  _zeroPlayerBallVelOnDetection: 0
   CurrentHP: 0
   _colorByValue: 0
   _colorMap: {fileID: 0}
@@ -1714,6 +1731,9 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   OverlappingZones: []
   _simulateTriggerLogic: 0
+  OnTIDetected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!33 &2365642297270663437
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2251,11 +2271,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshRenderer: {fileID: 6326730980148276118}
+  _meshRenderer2: {fileID: 0}
   _textLabel: {fileID: 0}
   _effect: 4
   _value: 0
   _infiniteDurability: 0
   _maxHP: 1
+  _zeroPlayerBallVelOnDetection: 0
   CurrentHP: 0
   _colorByValue: 0
   _colorMap: {fileID: 0}
@@ -2299,6 +2321,9 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   OverlappingZones: []
   _simulateTriggerLogic: 0
+  OnTIDetected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!33 &7999778120021894317
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2474,15 +2499,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e057187292de2f14d99f58a45bbb8bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spikes:
-  - {fileID: 4474362940959080647}
-  - {fileID: 687090205437828075}
-  - {fileID: 1517414946815354325}
-  - {fileID: 9072738616729609709}
-  - {fileID: 2347357756189035273}
-  - {fileID: 6525524510780661312}
-  - {fileID: 4796336407010642730}
-  - {fileID: 7579631638691246825}
+  _spikeCircle: {fileID: 0}
+  _loadingRing: {fileID: 0}
+  _rb: {fileID: 0}
 --- !u!1 &7466198536596572864
 GameObject:
   m_ObjectHideFlags: 0
@@ -2806,11 +2825,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshRenderer: {fileID: 1637599801768431700}
+  _meshRenderer2: {fileID: 0}
   _textLabel: {fileID: 0}
   _effect: 4
   _value: 0
   _infiniteDurability: 0
   _maxHP: 1
+  _zeroPlayerBallVelOnDetection: 0
   CurrentHP: 0
   _colorByValue: 0
   _colorMap: {fileID: 0}
@@ -2854,6 +2875,9 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   OverlappingZones: []
   _simulateTriggerLogic: 0
+  OnTIDetected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!33 &4905978893561697673
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3253,7 +3277,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 0
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!96 &4970180397677689512
 TrailRenderer:
   serializedVersion: 3
@@ -8388,11 +8412,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshRenderer: {fileID: 8091878343194679987}
+  _meshRenderer2: {fileID: 0}
   _textLabel: {fileID: 0}
   _effect: 4
   _value: 0
   _infiniteDurability: 0
   _maxHP: 1
+  _zeroPlayerBallVelOnDetection: 0
   CurrentHP: 0
   _colorByValue: 0
   _colorMap: {fileID: 0}
@@ -8436,6 +8462,9 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   OverlappingZones: []
   _simulateTriggerLogic: 0
+  OnTIDetected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!33 &5118783024266430248
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -8825,11 +8854,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshRenderer: {fileID: 4598005789634495998}
+  _meshRenderer2: {fileID: 0}
   _textLabel: {fileID: 0}
   _effect: 4
   _value: 0
   _infiniteDurability: 0
   _maxHP: 1
+  _zeroPlayerBallVelOnDetection: 0
   CurrentHP: 0
   _colorByValue: 0
   _colorMap: {fileID: 0}
@@ -8873,6 +8904,9 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   OverlappingZones: []
   _simulateTriggerLogic: 0
+  OnTIDetected:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!33 &5446107373090738987
 MeshFilter:
   m_ObjectHideFlags: 0

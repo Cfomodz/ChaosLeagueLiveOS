@@ -1243,6 +1243,7 @@ MonoBehaviour:
   _value: 1
   _infiniteDurability: 1
   _maxHP: 0
+  _zeroPlayerBallVelOnDetection: 0
   CurrentHP: 0
   _colorByValue: 1
   _colorMap: {fileID: 11400000, guid: 59dde40bb6c6c144baf78def4d027088, type: 2}

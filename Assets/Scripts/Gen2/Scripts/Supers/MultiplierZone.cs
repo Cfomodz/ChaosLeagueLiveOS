@@ -23,7 +23,22 @@ public class MultiplierZone : MonoBehaviour
 
     [SerializeField] private float _labelRotateSpeed = -70;
 
-    public void Init(RebellionController scm, PlayerHandler ph, Vector2 dollarColorMap, Gradient dollarToColor, Gradient dollarToTextColor)
+    public void InitRebellion(RebellionController scm, PlayerHandler ph, Vector2 dollarColorMap, Gradient dollarToColor, Gradient dollarToTextColor)
+    {
+        _rm = scm;
+        Ph = ph;
+        Multiplier = 0;
+
+        _dollarColorMap = dollarColorMap;
+        _dollarToColor = dollarToColor;
+        _dollarToTextColor = dollarToTextColor;
+
+        _collider.gameObject.SetActive(true);
+        _labelText.gameObject.SetActive(true);
+        _particleHype.gameObject.SetActive(true);
+    }
+
+    public void InitRoyalCelebration(RebellionController scm, PlayerHandler ph, Vector2 dollarColorMap, Gradient dollarToColor, Gradient dollarToTextColor)
     {
         _rm = scm;
         Ph = ph;
@@ -77,7 +92,7 @@ public class MultiplierZone : MonoBehaviour
         float t = Mathf.Clamp(Multiplier, 1, _dollarColorMap.y) / _dollarColorMap.y;
 
         var main = _particleHype.main;
-        main.startColor = _dollarToColor.Evaluate(t);
+       // main.startColor = _dollarToColor.Evaluate(t);
 
         _bodyMeshRenderer.material.color = MyUtil.SetColorSaveAlpha(_dollarToColor.Evaluate(t), _bodyMeshRenderer.material.color);
 
@@ -87,7 +102,7 @@ public class MultiplierZone : MonoBehaviour
         newCurve.mode = ParticleSystemCurveMode.TwoConstants;
         main.startLifetime = newCurve;
 
-        _labelText.color = _dollarToTextColor.Evaluate(t);
+        //_labelText.color = _dollarToTextColor.Evaluate(t);
         _particleHype.Play();
     }
 

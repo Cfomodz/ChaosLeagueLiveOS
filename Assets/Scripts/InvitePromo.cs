@@ -14,6 +14,8 @@ public class InvitePromo : MonoBehaviour
     [SerializeField] private GameManager _gm;
     [SerializeField] private AnimationCurve _scaleAnimation;
     [SerializeField] private GameObject _popupPanel;
+
+
     [SerializeField] private float _scaleAnimationDuration;
 
     [SerializeField] private MeshRenderer _inviterBody;
@@ -30,6 +32,8 @@ public class InvitePromo : MonoBehaviour
     [SerializeField] private float _popUpDistance = 1;
 
     [SerializeField] private AnimationCurve _popSpinSpeed;
+
+    
 
 
     //private WaitForSeconds waitOneSec = new WaitForSeconds(1);
@@ -50,7 +54,7 @@ public class InvitePromo : MonoBehaviour
         if (testButton)
         {
             testButton = false;
-            AnnounceNewInvite("493342634", "169321608"); 
+            AnnounceNewInvite("Jobexi1", "Jobexi2"); 
         }
     }
 

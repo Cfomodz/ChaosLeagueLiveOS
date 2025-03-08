@@ -34,7 +34,7 @@ public class AutoNgrokService : MonoBehaviour
     }
 
 
-    private IEnumerator RestartNgrokTunnel()
+    public IEnumerator RestartNgrokTunnel()
     {
         Debug.Log("Restarting Ngrok Tunnel"); 
         KillAllNgrokProcesses();

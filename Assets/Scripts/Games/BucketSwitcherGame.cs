@@ -66,6 +66,11 @@ public class BucketSwitcherGame : Game
     {
         int seconds = 0;
 
+        SwitchEffectors();
+        SwitchEffectors();
+        SwitchEffectors();
+        SwitchEffectors();
+
         // for some reason, the first frame (presumably) doesn't have IsGameStarted set to true
         while (IsGameStarted || seconds == 0)
         {

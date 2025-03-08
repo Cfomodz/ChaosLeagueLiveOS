@@ -29,9 +29,27 @@ public class GoldCoin : TravelingIndicator
         _rb2D.transform.position = origin;
 
         _rb2D.velocity = vel;
-        _mr.material.color = color;
+  //      _mr.material.color = color;
 
         _timeAlive = 0; 
+    }
+
+    public void InitializeSapphire(GoldDistributor goldDistributor, Vector3 origin, Vector2 vel, TravelingIndicatorIO _target, long _value, Color color)
+    {
+        value = _value;
+        Target = _target;
+
+       // TI_Type = TI_Type.GiveGoldDoBonus;
+
+        _goldDistributor = goldDistributor;
+
+        origin.z = zPlane;
+        _rb2D.transform.position = origin;
+
+        _rb2D.velocity = vel;
+        //      _mr.material.color = color;
+
+        _timeAlive = 0;
     }
 
     // Update is called once per frame

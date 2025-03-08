@@ -26,7 +26,7 @@ public class AutoPredictions : MonoBehaviour
 
     private void Start()
     {
-        InitAutoPredictions(); 
+        //InitAutoPredictions(); 
     }
 
 

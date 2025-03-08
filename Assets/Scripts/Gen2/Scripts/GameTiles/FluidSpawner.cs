@@ -11,9 +11,6 @@ public class FluidSpawner : MonoBehaviour
     [SerializeField] private bool testEnqueueFluidButton;
     [SerializeField] private FluidType testFluidType;
 
-    [SerializeField] private PBEffect _lavaEffect;
-    [SerializeField] private PBEffect _waterEffect;
-
     [SerializeField] private int particlesPerLavaBucket = 130;
 
     [SerializeField] private float lavaGravity = 1f;

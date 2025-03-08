@@ -11,6 +11,10 @@ public abstract class ShopEntry : PlayerReceiveable
     [SerializeField] private TextMeshPro _goldCostText;
 
     public int GoldCost;
+    public int SapphireCost;
+    public int EmeraldCost;
+    public int DiamondCost;
+    public int RubyCost;
     
     public void InitEntryBase(int goldCost, List<string> buyCommandText)
     {
@@ -18,6 +22,14 @@ public abstract class ShopEntry : PlayerReceiveable
         _buyCommandText.SetText(buyCommandText[0]);
         GoldCost = goldCost; 
     }
+
+    public void InitMultiEntryBase(int goldCost, List<string> buyCommandText)
+    {
+        _goldCostText.SetText($"Total Cost:\n{MyUtil.AbbreviateNum4Char(goldCost)} Gold");
+        _buyCommandText.SetText(buyCommandText[0]);
+        GoldCost = goldCost;
+    }
+
 
     public void HideCommandText()
     {

@@ -28,8 +28,9 @@ public class BidHandler : MonoBehaviour
     [SerializeField] private float _rotateSpeed = 0.01f;
     [SerializeField] private float _timeBetweenRaffleReleases = 0.4f;
     [SerializeField] private Transform _drawingIndicatorsRoot;
-    [SerializeField] private PrizeDisplay _winnerPrizeText;
+    [SerializeField] public PrizeDisplay _winnerPrizeText;
     [SerializeField] public BidQueueOrigin BidQueueOrigin;
+    
 
     [SerializeField] private Transform MirrorFromRaffleOrigin;
 
@@ -50,12 +51,18 @@ public class BidHandler : MonoBehaviour
     private ObjectPool<TI_Bid> _TI_BidPool;
 
     [SerializeField] private int _commonBasePrize = 100;
-    [SerializeField] private int _rareBasePrize = 200;
-    [SerializeField] private int _epicBasePrize = 1_000;
-    [SerializeField] private int _legendaryBasePrize = 4_000;
+    [SerializeField] private int _rareBasePrize = 250;
+    [SerializeField] private int _epicBasePrize = 500;
+    [SerializeField] private int _legendaryBasePrize = 1_000;
+    [SerializeField] private int _mythicBasePrize = 2_500;
+    [SerializeField] private int _etherealBasePrize = 5_000;
+    [SerializeField] private int _cosmicBasePrize = 10_000;
     private int _rarityBasePrize = 0;
+    private bool IsMystery = false;
 
     [SerializeField] private List<SpriteRenderer> _communityPointSpriteRenderers; 
+
+    [HideInInspector] private Dictionary<string, List<string>> _redemptionsIds = new Dictionary<string, List<string>>();
 
     private void Awake()
     {
@@ -81,11 +88,17 @@ public class BidHandler : MonoBehaviour
 
     public IEnumerator RunBiddingOn(GameTile gt) //GameTile tile
     {
-        _tileController.CurrentBiddingTile = gt;
+        _tileController.CurrentBiddingTile = gt;        
         _tileController.NextBiddingTile = null;
 
-        _winnerPrizeText.ResetWinnerPrize(); 
-        SetBasePrizeByRarity(gt.RarityType); 
+        _winnerPrizeText.ResetWinnerPrize();
+
+        if (gt.IsMystery)
+        {
+            SetBasePrizeByRarity(RarityType.Mystery);
+        }
+        else
+            SetBasePrizeByRarity(gt.RarityType);
 
         Debug.Log($"Starting new round in ticket handler: {gt.name}");
         //Immediately set which auction positions are valid, even before doing the spinning animation.
@@ -157,11 +170,12 @@ public class BidHandler : MonoBehaviour
                     AudioController.inst.PlaySound(AudioController.inst.RaffleSpotOpen, pitch, pitch);
                 }
 
-            }
+            }            
 
             yield return new WaitForSeconds(0.2f);
             i++;
         }
+        UpdateBiddingQ();
         yield return ReleasePlayersWhenReady(gt);
 
     }
@@ -252,11 +266,11 @@ public class BidHandler : MonoBehaviour
             //If we don't have enough players in the queue now due to !cancelbid or there just isn't enough, stop the timer
             if (_biddingQ.Count < gt.MinAuctionSlots)
             {
-                auctionTimeElapsed = 0; 
+                auctionTimeElapsed = 0;
                 _auctionTimerText.SetText("");
                 if (_countdownAudioSource.isPlaying)
-                    _countdownAudioSource.Stop(); 
-                continue; 
+                    _countdownAudioSource.Stop();
+                continue;
             }
 
             float t = auctionTimeElapsed / (float)gt.AuctionDuration;
@@ -267,8 +281,8 @@ public class BidHandler : MonoBehaviour
 
             if (secRemaining == 3)
             {
-                _countdownAudioSource.pitch = Random.Range(0.95f, 1.05f); 
-                _countdownAudioSource.Play();
+                _countdownAudioSource.pitch = Random.Range(0.95f, 1.05f);
+                _countdownAudioSource.PlayOneShot(_countdownAudioSource.clip);
             }
 
             auctionTimeElapsed++;
@@ -286,6 +300,7 @@ public class BidHandler : MonoBehaviour
             gt.Players.Add(ph);
 
             ph.ResetBid();
+            ph.CheckAuto(ph.pp.AutoBidRemainder, ph.pp.RiskSkips);
 
             PlayerBall pb = ph.GetPlayerBall();
             pb.Reactivate();
@@ -306,7 +321,9 @@ public class BidHandler : MonoBehaviour
 
         Vector3 beltWayPointPos = _beltWaypoint.transform.position; //It moves as soon as the Q flips to the other side, so cache the position
         ReleasePlayersIntoTile(gt, beltWayPointPos);
+
         gt.SetTicketBonus(_winnerPrizeText.GetWinnerPrize());
+
 
         //Immediately after this timer runs out, I need to finalize all players that made it in
         //Because I need to start populating the next tile from ticket requests
@@ -316,7 +333,7 @@ public class BidHandler : MonoBehaviour
         foreach (var ph in _raffleWinners)
         {
             //Traverse belt
-            ph.pb.AddPriorityWaypoint(beltWayPointPos, 0.1f);
+            ph.pb.AddPriorityWaypoint(beltWayPointPos, 0.2f); // Speed Spot
             ph.ReceivableTarget = gt.EntrancePipe;
 
             yield return new WaitForSeconds(_timeBetweenRaffleReleases);
@@ -324,10 +341,10 @@ public class BidHandler : MonoBehaviour
         _raffleWinners.Clear();
 
         _auctionTimerText.SetText(MyUtil.GetMinuteSecString(0));
-
     }
     public void ReleasePlayersIntoTile(GameTile gt, Vector3 beltWayPointPos)
     {
+        
         _tileController.GameplayTile = gt;
 
         //Select and move the players on the auction slots
@@ -335,14 +352,16 @@ public class BidHandler : MonoBehaviour
         {
             PlayerHandler ph = _biddingQ[0];
             //Traverse belt
-            ph.pb.AddPriorityWaypoint(beltWayPointPos, 0.1f);
+            ph.pb.AddPriorityWaypoint(beltWayPointPos, 0.2f); // Speed Spot
             ph.ReceivableTarget = gt.EntrancePipe;
             ph.ResetBid();
+            ph.CheckAuto(ph.pp.AutoBidRemainder, ph.pp.RiskSkips);
 
             gt.ConveyorBelt.Add(ph);
             gt.Players.Add(ph);
 
             _biddingQ.Remove(ph);
+
             ph.SetState(PlayerHandlerState.Gameplay);
         }
 
@@ -355,23 +374,26 @@ public class BidHandler : MonoBehaviour
 
         //Clear bidding Q
         int totalBidsLeftover = 0;
-        for(int i = _biddingQ.Count - 1; i >= 0; i--)
+        for (int i = _biddingQ.Count - 1; i >= 0; i--)
         {
-            PlayerHandler ph = _biddingQ[i]; 
+            PlayerHandler ph = _biddingQ[i];
             totalBidsLeftover += ph.pp.CurrentBid;
-            ClearFromQ(ph, false); 
+            ClearFromQ(ph, false);
         }
 
         //Send the leftover tickets as points to the king
         if (_kingController.currentKing != null)
             TextPopupMaster.Inst.CreateTravelingIndicator(totalBidsLeftover.ToString(), totalBidsLeftover, RaffleBox, _kingController.currentKing.Ph, 0.08f, Color.white, null);
 
+        
+        _redemptionsIds.Clear();
         _biddingQ.Clear();
-        UpdateRaffleDrawIndicatorsCount(0); 
+        UpdateRaffleDrawIndicatorsCount(0);
         UpdateBiddingQ();
+        StartCoroutine(_gm.RebidWaiter());
     }
 
-    public void ClearFromQ(PlayerHandler ph, bool updateQ)
+    public void ClearFromQ(PlayerHandler ph, bool updateQ, bool unbid = false)
     {
         ph.ResetBid();
 
@@ -385,8 +407,15 @@ public class BidHandler : MonoBehaviour
         if (ph.pb != null)
             ph.pb.ExplodeBall();
 
+     //   CancelTicketsUsed(ph, unbid);
+
         if (updateQ)
-            UpdateBiddingQ(); 
+            UpdateBiddingQ();
+    }
+
+    public void ClearAutoBid(PlayerHandler ph)
+    {
+        ph.pp.AutoBidRemainder = 0;
     }
 
     private TI_Bid TI_BidFactory()
@@ -425,10 +454,22 @@ public class BidHandler : MonoBehaviour
         _TI_BidPool.ReturnObject(TI_Bid);
     }
 
-
-    public void BidRedemption(PlayerHandler ph, int bidAmount, BidType bidType)
+    public void BidRedemption(PlayerHandler ph, int bidAmount, BidType bidType, string redemptionID = null, string rewardID = null)
     {
         SpawnTI_Bid(ph, target:ph, bidAmount, bidType);
+
+        if (redemptionID == null)
+            return;
+        if (rewardID == null)
+            return;
+
+        List<string> redemptionsIds;
+        ph.redemptionsIds.TryGetValue(rewardID, out redemptionsIds);
+        if (redemptionsIds == null)
+            redemptionsIds = new List<string>();
+
+        redemptionsIds.Add(redemptionID);
+        ph.redemptionsIds[rewardID] = redemptionsIds;
     }
 
     public void TryAddToBiddingQ(PlayerHandler ph)
@@ -457,14 +498,14 @@ public class BidHandler : MonoBehaviour
 
         int totalRaffleTickets = 0;
         int totalAuctionSlotTickets = 0;
-        int totalPlayersInRaffle = 0; 
+        int totalPlayersInRaffle = 0;
         //If a player is in the top auction slots, set their mode to full ball
         for (int i = 0; i < _biddingQ.Count; i++)
         {
             if (i < _auctionPositions.Count() && _auctionPositions[i].IsValid)
             {
                 _biddingQ[i].SetTicketQPos(_auctionPositions[i], false, this);
-                totalAuctionSlotTickets += _biddingQ[i].pp.CurrentBid; 
+                totalAuctionSlotTickets += _biddingQ[i].pp.CurrentBid;
             }
             else
             {
@@ -472,17 +513,17 @@ public class BidHandler : MonoBehaviour
 
                 _biddingQ[i].SetTicketQPos(RaffleBox, true, this);
                 totalRaffleTickets += _biddingQ[i].pp.CurrentBid;
-                totalPlayersInRaffle++; 
+                totalPlayersInRaffle++;
             }
         }
 
-        if(totalPlayersInRaffle <= _raffleDrawIndicators.Length + 1)
+        if (totalPlayersInRaffle <= _raffleDrawIndicators.Length + 1)
             SetRaffleDrawIndicatorsLit(totalPlayersInRaffle);
-        
 
         _winnerPrizeText.SetWinnerPrize(_rarityBasePrize + totalAuctionSlotTickets + totalRaffleTickets);
 
-        RaffleBox.SetRaffleCountText(MyUtil.AbbreviateNum4Char(totalRaffleTickets)); 
+
+        RaffleBox.SetRaffleCountText(MyUtil.AbbreviateNum4Char(totalRaffleTickets));
     }
 
     private void UpdateRaffleDrawIndicatorsCount(int count)
@@ -573,11 +614,35 @@ public class BidHandler : MonoBehaviour
             _rarityBasePrize = _rareBasePrize;
         else if (rarity == RarityType.Epic)
             _rarityBasePrize = _epicBasePrize;
-        else
+        else if (rarity == RarityType.Legendary)
             _rarityBasePrize = _legendaryBasePrize;
+        else if (rarity == RarityType.Mythic) 
+            _rarityBasePrize = _mythicBasePrize;
+        else if (rarity == RarityType.Ethereal)
+            _rarityBasePrize = _etherealBasePrize;
+        else if (rarity == RarityType.Mystery)
+            _rarityBasePrize = UnityEngine.Random.Range(117, 71717) + UnityEngine.Random.Range(17, 1717) + UnityEngine.Random.Range(7, 717);
+        else
+            _rarityBasePrize = _cosmicBasePrize;
+    
 
         UpdateBiddingQ(); 
     }
+    /*
+    private async void CancelTicketsUsed(PlayerHandler ph, bool unbid = false)
+    {
+      /*  if (unbid)
+        {
+            foreach (var rewardID in ph.redemptionsIds.Keys)
+            {
+                List<string> redemptionsIds = ph.redemptionsIds[rewardID];
+                await TwitchApi.RejectRewardRedemption(rewardID, redemptionsIds);
+            }
+        }
+
+        ph.redemptionsIds.Clear();
+    } */
+
 
     public GameManager GetGameManager()
     {

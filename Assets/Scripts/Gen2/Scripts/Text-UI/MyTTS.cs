@@ -50,7 +50,6 @@ public class MyTTS : MonoBehaviour
     {
         inst = this;
 
-        
         if (!string.IsNullOrEmpty(AppConfig.inst.GetS("AWS_ACCESS_KEY")))
         {
             string accessKey = AppConfig.inst.GetS("AWS_ACCESS_KEY");
@@ -121,12 +120,199 @@ public class MyTTS : MonoBehaviour
         var tts = audioQ.Dequeue();
         audioSource.pitch = tts.pitch;
         audioSource.clip = tts.clip;
-        audioSource.Play(); 
+        audioSource.PlayOneShot(tts.clip); 
     }
 
-    public void PlayerSpeech(string textToSpeak, VoiceId voiceId)
+    public void PlayerSpeech(string textToSpeak, int VoiceIndex)
     {
-        SpeechMaster(textToSpeak, voiceId, AudioPitch.Reg, addToQ:false);
+        VoiceId SpeakerName;
+
+        switch (VoiceIndex)
+        {
+            default: //Default Male Name 0
+                SpeakerName = Amazon.Polly.VoiceId.Joey;
+                break;
+            case 1: //Default Female Name 1
+                SpeakerName = Amazon.Polly.VoiceId.Salli;
+                break;
+            case 2: // Beginning of Tier 1 Names 2-14
+                SpeakerName = Amazon.Polly.VoiceId.Emma;
+                break;
+            case 3:
+                SpeakerName = Amazon.Polly.VoiceId.Nicole;
+                break;
+            case 4:
+                SpeakerName = Amazon.Polly.VoiceId.Russell;
+                break;
+            case 5:
+                SpeakerName = Amazon.Polly.VoiceId.Amy;
+                break;
+            case 6:
+                SpeakerName = Amazon.Polly.VoiceId.Brian;
+                break;
+            case 7:
+                SpeakerName = Amazon.Polly.VoiceId.Aditi;
+                break;
+            case 8:
+                SpeakerName = Amazon.Polly.VoiceId.Raveena;
+                break;
+            case 9:
+                SpeakerName = Amazon.Polly.VoiceId.Ivy;
+                break;
+            case 10:
+                SpeakerName = Amazon.Polly.VoiceId.Joanna;
+                break;
+            case 11:
+                SpeakerName = Amazon.Polly.VoiceId.Kendra;
+                break;
+            case 12:
+                SpeakerName = Amazon.Polly.VoiceId.Kimberly;
+                break;
+            case 13:
+                SpeakerName = Amazon.Polly.VoiceId.Kevin;
+                break;
+            case 14:
+                SpeakerName = Amazon.Polly.VoiceId.Geraint;
+                break; // End of Tier 1 Names 2-14
+            case 15: // Beginning of Tier 2 Names 15-35
+                SpeakerName = Amazon.Polly.VoiceId.Celine;
+                break;
+            case 16:
+                SpeakerName = Amazon.Polly.VoiceId.Lea;
+                break;
+            case 17:
+                SpeakerName = Amazon.Polly.VoiceId.Mathieu;
+                break;
+            case 18:
+                SpeakerName = Amazon.Polly.VoiceId.Chantal;
+                break;
+            case 19:
+                SpeakerName = Amazon.Polly.VoiceId.Marlene;
+                break;
+            case 20:
+                SpeakerName = Amazon.Polly.VoiceId.Vicki;
+                break;
+            case 21:
+                SpeakerName = Amazon.Polly.VoiceId.Hans;
+                break;
+            case 22:
+                SpeakerName = Amazon.Polly.VoiceId.Carla;
+                break;
+            case 23:
+                SpeakerName = Amazon.Polly.VoiceId.Bianca;
+                break;
+            case 24:
+                SpeakerName = Amazon.Polly.VoiceId.Giorgio;
+                break;
+            case 25:
+                SpeakerName = Amazon.Polly.VoiceId.Camila;
+                break;
+            case 26:
+                SpeakerName = Amazon.Polly.VoiceId.Vitoria;
+                break;
+            case 27:
+                SpeakerName = Amazon.Polly.VoiceId.Ricardo;
+                break;
+            case 28:
+                SpeakerName = Amazon.Polly.VoiceId.Ines;
+                break;
+            case 29:
+                SpeakerName = Amazon.Polly.VoiceId.Cristiano;
+                break;
+            case 30:
+                SpeakerName = Amazon.Polly.VoiceId.Conchita;
+                break;
+            case 31:
+                SpeakerName = Amazon.Polly.VoiceId.Lucia;
+                break;
+            case 32:
+                SpeakerName = Amazon.Polly.VoiceId.Enrique;
+                break;
+            case 33:
+                SpeakerName = Amazon.Polly.VoiceId.Mia;
+                break;
+            case 34:
+                SpeakerName = Amazon.Polly.VoiceId.Lupe;
+                break;
+            case 35:
+                SpeakerName = Amazon.Polly.VoiceId.Penelope;
+                break;
+            case 36:
+                SpeakerName = Amazon.Polly.VoiceId.Miguel;
+                break; // End of Tier 2 Names 15-35
+            case 37: // End of Tier 2 Names 36-59
+                SpeakerName = Amazon.Polly.VoiceId.Zeina;
+                break;
+            case 38:
+                SpeakerName = Amazon.Polly.VoiceId.Zhiyu;
+                break;
+            case 39:
+                SpeakerName = Amazon.Polly.VoiceId.Naja;
+                break;
+            case 40:
+                SpeakerName = Amazon.Polly.VoiceId.Mads;
+                break;
+            case 41:
+                SpeakerName = Amazon.Polly.VoiceId.Lotte;
+                break;
+            case 42:
+                SpeakerName = Amazon.Polly.VoiceId.Ruben;
+                break;
+            case 43:
+                SpeakerName = Amazon.Polly.VoiceId.Aditi;
+                break;
+            case 44:
+                SpeakerName = Amazon.Polly.VoiceId.Dora;
+                break;
+            case 45:
+                SpeakerName = Amazon.Polly.VoiceId.Karl;
+                break;
+            case 46:
+                SpeakerName = Amazon.Polly.VoiceId.Mizuki;
+                break;
+            case 47:
+                SpeakerName = Amazon.Polly.VoiceId.Takumi;
+                break;
+            case 48:
+                SpeakerName = Amazon.Polly.VoiceId.Seoyeon;
+                break;
+            case 49:
+                SpeakerName = Amazon.Polly.VoiceId.Liv;
+                break;
+            case 50:
+                SpeakerName = Amazon.Polly.VoiceId.Ewa;
+                break;
+            case 51:
+                SpeakerName = Amazon.Polly.VoiceId.Maja;
+                break;
+            case 52:
+                SpeakerName = Amazon.Polly.VoiceId.Jacek;
+                break;
+            case 53:
+                SpeakerName = Amazon.Polly.VoiceId.Jan;
+                break;
+            case 54:
+                SpeakerName = Amazon.Polly.VoiceId.Carmen;
+                break;
+            case 55:
+                SpeakerName = Amazon.Polly.VoiceId.Tatyana;
+                break;
+            case 56:
+                SpeakerName = Amazon.Polly.VoiceId.Maxim;
+                break;
+            case 57:
+                SpeakerName = Amazon.Polly.VoiceId.Astrid;
+                break;
+            case 58:
+                SpeakerName = Amazon.Polly.VoiceId.Filiz;
+                break;
+            case 59:
+                SpeakerName = Amazon.Polly.VoiceId.Gwyneth;
+                break; // End of Tier 2 Names 36-59
+
+        }
+
+        SpeechMaster(textToSpeak, SpeakerName, AudioPitch.Reg, addToQ: false);
     }
 
     public void Announce(string textToSpeak)
@@ -233,13 +419,13 @@ public class MyTTS : MonoBehaviour
 
     private void SpeechLocal(string textToSpeak, VoiceId voiceId, AudioPitch pitch, bool addToQ)
     {
-        float pitchVal = 1;
+    /*    float pitchVal = 1;
         if (pitch == AudioPitch.Low)
             pitchVal = 0.5f;
         else if (pitch == AudioPitch.Reg)
             pitchVal = 1f;
         else if (pitch == AudioPitch.High)
-            pitchVal = 1.5f;
+            pitchVal = 1.5f; */
 
         //Speaker.Instance.Speak(textToSpeak, pitch: pitchVal); //TODO, need open source local TTS
         Debug.Log("TODO: Need local open source TTS");

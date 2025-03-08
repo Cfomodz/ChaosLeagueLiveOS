@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.ProBuilder.MeshOperations;
 
-public enum TI_Type { _Default, GivePoints, GiveGold, GiveGoldDoBonus, Multiply, Tomato};
+public enum TI_Type { _Default, GivePoints, GiveGold, GiveGoldDoBonus, Multiply, Tomato, Sapphire};
 
 public class TI_Text : TravelingIndicator
 {

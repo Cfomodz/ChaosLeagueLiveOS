@@ -39,6 +39,12 @@ public class CrownShopEntry : ShopEntry
 
         StartCoroutine(PurchaseAnimation(pb));
 
+        pb.Ph.pp.CrownTier = 0;
+        pb.Ph.pp.EnhancedCrown = false;
+
+        if (pb.Ph.IsKing())
+            pb.Ph.ReloadKingCosmetics(71717);
+
         AudioController.inst.PlaySound(AudioController.inst.StorePurchase, 0.95f, 1.05f);
     }
 

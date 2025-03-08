@@ -29,11 +29,11 @@ public class SQLiteServiceAsync : MonoBehaviour
         Debug.Log(dbConnection.GetTableInfoAsync(_tableName));
 
 
-        _cts = new CancellationTokenSource();
+//        _cts = new CancellationTokenSource();
 
-#if !UNITY_EDITOR
-        _ = AutoBackupsLoop(_cts);
-#endif
+//#if !UNITY_EDITOR
+//        _ = AutoBackupsLoop(_cts);
+//#endif
 
     }
 
@@ -54,27 +54,27 @@ public class SQLiteServiceAsync : MonoBehaviour
         }
     }
 
-    public async Task AutoBackupsLoop(CancellationTokenSource cts)
-    {
-        while (true)
-        {
-            if (_cts.IsCancellationRequested)
-                return;
+    //public async Task AutoBackupsLoop(CancellationTokenSource cts)
+    //{
+    //    while (true)
+    //    {
+    //        if (_cts.IsCancellationRequested)
+    //            return;
 
-            try
-            {
-                await Task.Delay(AppConfig.inst.GetI("MinutesBetweenDBBackups") * 60 * 1000);
-                BackupDB();
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"An error occurred during the database backup process: {e.Message}");
-                await Task.Delay(60_000);
-            }
-        }
-    }
+    //        try
+    //        {
+    //            await Task.Delay(AppConfig.inst.GetI("MinutesBetweenDBBackups") * 60 * 1000);
+    //            BackupDB();
+    //        }
+    //        catch (Exception e)
+    //        {
+    //            Debug.LogError($"An error occurred during the database backup process: {e.Message}");
+    //            await Task.Delay(60_000);
+    //        }
+    //    }
+    //}
 
-    private void BackupDB()
+    public void BackupDB()
     {
         string backupFolder = Path.Combine(Application.streamingAssetsPath, "DatabaseBackups");
         if (!Directory.Exists(backupFolder))
@@ -89,6 +89,7 @@ public class SQLiteServiceAsync : MonoBehaviour
     {
         _ = ClearPropertyFromAllEntries(_tableName, "InvitedByID");
         _ = ClearPropertyFromAllEntries(_tableName, "InvitesJSON");
+        _ = ClearPropertyFromAllEntries(_tableName, "InviteCount");
 
     }
     private void OnDestroy()

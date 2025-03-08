@@ -4,11 +4,11 @@ using TMPro;
 using TwitchLib.Api.Helix.Models.Charity.GetCharityCampaign;
 using UnityEngine;
 
-public class PrizeDisplay : MonoBehaviour
+public class PrizeDisplay : MonoBehaviour, TravelingIndicatorIO
 {
 
-    [SerializeField] private TextMeshPro _winnerPrizeTextFront;
-    [SerializeField] private TextMeshPro _winnerPrizeTextBack;
+    [SerializeField] public TextMeshPro _winnerPrizeTextFront;
+    [SerializeField] public TextMeshPro _winnerPrizeTextBack;
 
     [SerializeField] private Transform _prizeRotationRoot; 
 
@@ -95,5 +95,21 @@ public class PrizeDisplay : MonoBehaviour
         }
         _prizeRotationRoot.localScale = Vector3.one;
 
+    }
+
+    public void ReceiveTravelingIndicator(TravelingIndicator TI)
+    {
+        //if (TI.TI_Type != TI_Type.GiveGold && TI.TI_Type != TI_Type.GiveGoldDoBonus)
+        //    return;
+
+        //_storedGold += (int)TI.value;
+        //AudioController.inst.PlaySound(AudioController.inst.CollectGold, 0.88f, 1.0f);
+
+        //UpdateGoldStoredText();
+    }
+
+    public Vector3 Get_TI_IO_Position()
+    {
+        return _giftBox.transform.position;
     }
 }

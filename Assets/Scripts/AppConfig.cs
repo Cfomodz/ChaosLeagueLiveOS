@@ -69,10 +69,50 @@ public class AppConfig
 
     public static readonly string[] BadWords = { "Homosexual", "Homophobic", "Racist", "Gay", "Lgbt", "Jew", "Jewish", "Anti-semitic", "Chink", "Muslims", "Muslim", "Isis", "Islamophobe", "homophobe ", "Bombing", "Sexyhot", "Bastard", "Bitch", "Fucker", "Cunt", "Fuck", "Goddamn", "Motherfucker", "Nigga", "Nigger", "Nigers", "Knee Grr", "Knee Gr", "neegro", "Knee", "Prick", "Shit", "shit ass", "Shitass", "son of a bitch", "Whore", "Thot", "Slut", "Faggot", "Dick", "Pussy", "Penis", "Vagina", "Negro", "Coon", "Bitched", "Sexist", "Freaking", "Cock", "Sucker", "Lick", "Licker", "Rape", "Molest", "Anal", "Buttrape", "Coont", "Cancer", "Sex", "Retard", "Fuckface", "Dumbass", "5h1t", "5hit", "A_s_s", "a2m", "a55", "adult", "amateur", "anal", "anal impaler", "anal leakage", "anilingus", "anus", "ar5e", "arrse", "arse", "arsehole", "ass fuck", "asses", "assfucker", "ass-fucker", "assfukka", "asshole", "asshole", "assholes", "assmucus", "assmunch", "asswhole", "autoerotic", "b!tch", "b00bs", "b17ch", "b1tch", "ballbag", "ballsack", "bang (one's) box", "bangbros", "bareback", "bastard", "beastial", "beastiality", "beef curtain", "bellend", "bestial", "bestiality", "bi+ch", "biatch", "bimbos", "birdlock", "bitch", "bitch tit", "bitcher", "bitchers", "bitches", "bitchin", "bitching", "bloody", "blow job", "blow me", "blow mud", "blowjob", "blowjobs", "blue waffle", "blumpkin", "boiolas", "bollock", "bollok", "boner", "boobies", "boob", "boobs", "booobs", "boooobs", "booooobs", "booooooobs", "breasts", "buceta", "bugger", "bunny fucker", "bust a load", "busty", "butt", "butt fuck", "butthole", "buttmuch", "buttplug", "c0ck", "c0cksucker", "carpet muncher", "carpetmuncher", "cawk", "chink", "choade", "chota bags", "cipa", "cl1t", "clit", "clit licker", "clitoris", "clits", "clitty litter", "clusterfuck", "cnut", "cock", "cock pocket", "cock snot", "cockface", "cockhead", "cockmunch", "cockmuncher", "cocks", "cocksuck ", "cocksucked ", "cocksucker", "cock-sucker", "cocksucking", "cocksucks ", "cocksuka", "cocksukka", "cok", "cokmuncher", "coksucka", "coon", "cop some wood", "cornhole", "corp whore", "cox", "cum", "cum chugger", "cum dumpster", "cum freak", "cum guzzler", "cumdump", "cummer", "cumming", "cums", "cumshot", "cunilingus", "cunillingus", "cunnilingus", "cunt", "cunt hair", "cuntbag", "cuntlick ", "cuntlicker ", "cuntlicking ", "cunts", "cuntsicle", "cunt-struck", "cut rope", "cyalis", "cyberfuc", "cyberfuck ", "cyberfucked ", "cyberfucker", "cyberfuckers", "cyberfucking ", "damn", "dick hole", "dick shy", "dickhead", "dildo", "dildos", "dink", "dinks", "dirsa", "dirty Sanchez", "dlck", "dog-fucker", "doggie style", "doggiestyle", "doggin", "dogging", "donkeyribber", "doosh", "duche", "dyke", "eat a dick", "eat hair pie", "ejaculate", "ejaculated", "ejaculates ", "ejaculating ", "ejaculatings", "ejaculation", "ejakulate", "erotic", "f u c k", "f u c k e r", "f_u_c_k", "f4nny", "facial", "fag", "fagging", "faggitt", "faggot", "faggs", "fagot", "fagots", "fags", "fanny", "fannyflaps", "fannyfucker", "fanyy", "fatass", "fcuk", "fcuker", "fcuking", "feck", "fecker", "felching", "fellate", "fellatio", "fingerfuck ", "fingerfucked ", "fingerfucker ", "fingerfuckers", "fingerfucking ", "fingerfucks ", "fist fuck", "fistfuck", "fistfucked ", "fistfucker ", "fistfuckers ", "fistfucking ", "fistfuckings ", "fistfucks ", "flange", "flog the log", "fook", "fooker", "fuck hole", "fuck puppet", "fuck trophy", "fuck yo mama", "fuck", "fucka", "fuck-ass", "fuck-bitch", "fucked", "fucker", "fuckers", "fuckhead", "fuckheads", "fuckin", "fucking", "fuckings", "fuckingshitmotherfucker", "fuckme ", "fuckmeat", "fucks", "fucktoy", "fuckwhit", "fuckwit", "fudge packer", "fudgepacker", "fuk", "fuker", "fukker", "fukkin", "fuks", "fukwhit", "fukwit", "fux", "fux0r", "gangbang", "gangbang", "gang-bang", "gangbanged ", "gangbangs ", "gassy ass", "gaylord", "gaysex", "goatse", "hawk", "ham flap", "hardcoresex ", "heshe", "hoar", "hoare", "hoer", "homo", "homoerotic", "hore", "horniest", "horny", "hotsex", "how to kill", "how to murdep", "jackoff", "jack-off ", "japs", "jerk", "jerk-off ", "jism", "jiz ", "jizm ", "jizz", "kawk", "kinky Jesus", "knob", "knob end", "knobead", "knobed", "knobend", "knobend", "knobhead", "knobjocky", "knobjokey", "kock", "kondum", "kondums", "kum", "kummer", "kumming", "kums", "kunilingus", "kwif", "l3i+ch", "l3itch", "labia", "lust", "lusting", "m0f0", "m0fo", "m45terbate", "ma5terb8", "ma5terbate", "mafugly", "masochist", "masterb8", "masterbat*", "masterbat3", "masterbate", "master-bate", "masterbation", "masterbations", "masturbate", "mof0", "mofo", "mo-fo", "mothafuck", "mothafucka", "mothafuckas", "mothafuckaz", "mothafucked ", "mothafucker", "mothafuckers", "mothafuckin", "mothafucking ", "mothafuckings", "mothafucks", "mother fucker", "mother fucker", "motherfuck", "motherfucked", "motherfucker", "motherfuckers", "motherfuckin", "motherfucking", "motherfuckings", "motherfuckka", "motherfucks", "muff", "muff puff", "mutha", "muthafecker", "muthafuckker", "muther", "mutherfucker", "n1gga", "n1gger", "nazi", "need the dick", "nigg3r", "nigg4h", "nigga", "niggah", "niggas", "niggaz", "nigger", "nig ", "niggers", "snicker", "nob jokey", "nobhead", "nobjocky", "nobjokey", "numbnuts", "nut butter", "nutsack", "orgasim ", "orgasims ", "orgasm", "orgasms ", "p0rn", "pecker", "penis", "penisfucker", "phonesex", "phuck", "phuk", "phuked", "phuking", "phukked", "phukking", "phuks", "phuq", "pigfucker", "pimpis", "piss", "pissed", "pisser", "pissers", "pisses ", "pissflaps", "pissin ", "pissing", "pissoff ", "poop", "porn", "porno", "pornography", "pornos", "prick", "pricks ", "pron", "pube", "pusse", "pussi", "pussies", "pussy", "pussy fart", "pussy palace", "pussys ", "queaf", "queer", "rectum", "retard", "rimjaw", "rimming", "s.o.b.", "s_h_i_t", "sadism", "sadist", "sandbar", "sausage queen", "schlong", "screwing", "scroat", "scrote", "scrotum", "semen", "sex", "sh!+", "sh!t", "sh1t", "shag", "shagger", "shaggin", "shagging", "shemale", "shi+", "shit", "shit fucker", "shitdick", "shite", "shited", "shitey", "shitfuck", "shitfull", "shithead", "shiting", "shitings", "shits", "shitted", "shitter", "shitters ", "shitting", "shittings", "shitty ", "skank", "slope", "slut", "slut bucket", "sluts", "smegma", "smut", "snatch", "son-of-a-bitch", "spunk", "t1tt1e5", "t1tties", "teets", "teez", "testical", "testicle", "tit wank", "titfuck", "tits", "titt", "tittie5", "tittiefucker", "titties", "tittyfuck", "tittywank", "titwank", "tosser", "turd", "tw4t", "twat", "twathead", "twatty", "twunt", "twunter", "v14gra", "v1gra", "vagina", "viagra", "vulva", "w00se", "wang", "wank", "wanker", "wanky", "whoar", "whore", "willies", "willy", "wtf", "xrated", "xxx", "sucker", "dumbass", "Kys", "Shooting", "Shoot", "Bomb", "Terrorist", "Terrorism", "Bombed", "Trump", "Maga", "Conservative", "Make america great again", "Far right", "Necrophilia", "Mongoloid", "Furfag", "Cp", "Pedo", "Pedophile", "Pedophilia", "Child predator", "Predatory", "Depression", "Cut myself", "I want to die", "Fuck life", "Redtube", "Loli", "Lolicon", "Cub", "Watermellon", "Fried Chicken" };
 
-    public static int CommonMult = 1;
-    public static int RareMult = 2;
-    public static int EpicMult = 10;
-    public static int LegendaryMult = 40; 
+    public static int CommonMult;
+    public static int RareMult;
+    public static int EpicMult;
+    public static int LegendaryMult; 
+    public static int MythicMult; 
+    public static int EtherealMult; 
+    public static int CosmicMult;
+    public static int CommonPlusMult;
+    public static int RarePlusMult;
+    public static int EpicPlusMult;
+    public static int LegendaryPlusMult;
+    public static int MythicPlusMult;
+    public static int EtherealPlusMult;
+    public static int CosmicPlusMult;
+    public static int SuperCommonMult;
+    public static int SuperRareMult;
+    public static int SuperEpicMult;
+    public static int SuperLegendaryMult;
+    public static int SuperMythicMult;
+    public static int SuperEtherealMult;
+    public static int SuperCosmicMult;
+
+    public static int CommonPlusGoldMult;
+    public static int RarePlusGoldMult;
+    public static int EpicPlusGoldMult;
+    public static int LegendaryPlusGoldMult;
+    public static int MythicPlusGoldMult;
+    public static int EtherealPlusGoldMult;
+    public static int CosmicPlusGoldMult;
+    public static int SuperCommonGoldMult;
+    public static int SuperRareGoldMult;
+    public static int SuperEpicGoldMult;
+    public static int SuperLegendaryGoldMult;
+    public static int SuperMythicGoldMult;
+    public static int SuperEtherealGoldMult;
+    public static int SuperCosmicGoldMult;
+
+    public static bool Tuesday = false;    
+    public static bool Wednesday = false;    
+    public static bool Thursday = false;    
+    public static bool Friday = false;    
+    public static bool Saturday = false;
+    public static bool Sunday = false;
+    public static bool Monday = false;
 
     public static bool IsPublicBuild()
     {
@@ -84,35 +124,192 @@ public class AppConfig
     }
     public static string GetClientID()
     {
-        string API_MODE = inst.GetS("API_MODE");
-        if (API_MODE == "STAGING")
-            return inst.GetS("CLIENT_ID_STAGING");
-        else if (API_MODE == "PRIVATE")
-            return inst.GetS("CLIENT_ID_PRIVATE");
-        else //PUBLIC
-            return inst.GetS("CLIENT_ID_PUBLIC"); 
+        return inst.GetS("CLIENT_ID_PUBLIC");
     }
 
     public static string GetClientSecret()
     {
-        string API_MODE = inst.GetS("API_MODE");
-        if (API_MODE == "STAGING")
-            return inst.GetS("CLIENT_SECRET_STAGING");
-        else //(API_MODE == "PRIVATE")
-            return inst.GetS("CLIENT_SECRET_PRIVATE");
+     return inst.GetS("CLIENT_SECRET_PRIVATE");
     }
 
+    public static void CheckHappyHour()
+    {
+        if (Sunday)
+        {
+            CommonMult = 2;
+            RareMult = 3;
+            EpicMult = 7;
+            LegendaryMult = 13;
+            MythicMult = 32;
+            EtherealMult = 63;
+            CosmicMult = 125;
+            CommonPlusMult = 3;
+            RarePlusMult = 7;
+            EpicPlusMult = 13;
+            LegendaryPlusMult = 32;
+            MythicPlusMult = 63;
+            EtherealPlusMult = 125;
+            CosmicPlusMult = 313;
+            SuperCommonMult = 7;
+            SuperRareMult = 13;
+            SuperEpicMult = 32;
+            SuperLegendaryMult = 63;
+            SuperMythicMult = 125;
+            SuperEtherealMult = 313;
+            SuperCosmicMult = 375;
+
+            CommonPlusGoldMult = 3;
+            RarePlusGoldMult = 5;
+            EpicPlusGoldMult = 10;
+            LegendaryPlusGoldMult = 25;
+            MythicPlusGoldMult = 50;
+            EtherealPlusGoldMult = 100;
+            CosmicPlusGoldMult = 250;
+            SuperCommonGoldMult = 5;
+            SuperRareGoldMult = 10;
+            SuperEpicGoldMult = 25;
+            SuperLegendaryGoldMult = 50;
+            SuperMythicGoldMult = 100;
+            SuperEtherealGoldMult = 250;
+            SuperCosmicGoldMult = 300;
+        }
+        else
+        {
+            CommonMult = 1;
+            RareMult = 2;
+            EpicMult = 5;
+            LegendaryMult = 10;
+            MythicMult = 25;
+            EtherealMult = 50;
+            CosmicMult = 100;
+            CommonPlusMult = 2;
+            RarePlusMult = 5;
+            EpicPlusMult = 10;
+            LegendaryPlusMult = 25;
+            MythicPlusMult = 50;
+            EtherealPlusMult = 100;
+            CosmicPlusMult = 250;
+            SuperCommonMult = 5;
+            SuperRareMult = 10;
+            SuperEpicMult = 25;
+            SuperLegendaryMult = 50;
+            SuperMythicMult = 100;
+            SuperEtherealMult = 250;
+            SuperCosmicMult = 300;
+
+            CommonPlusGoldMult = 2;
+            RarePlusGoldMult = 3;
+            EpicPlusGoldMult = 7;
+            LegendaryPlusGoldMult = 13;
+            MythicPlusGoldMult = 32;
+            EtherealPlusGoldMult = 63;
+            CosmicPlusGoldMult = 125;
+            SuperCommonGoldMult = 3;
+            SuperRareGoldMult = 7;
+            SuperEpicGoldMult = 13;
+            SuperLegendaryGoldMult = 32;
+            SuperMythicGoldMult = 63;
+            SuperEtherealGoldMult = 125;
+            SuperCosmicGoldMult = 313;
+        }
+    }
 
     public static int GetMult(RarityType rarity)
     {
+        CheckHappyHour();
+
         if (rarity == RarityType.Common)
             return CommonMult;
-        else if(rarity == RarityType.Rare)
+        else if (rarity == RarityType.Rare)
             return RareMult;
-        else if(rarity == RarityType.Epic)
+        else if (rarity == RarityType.Epic)
             return EpicMult;
-        else
+        else if (rarity == RarityType.Legendary)
             return LegendaryMult;
+        else if (rarity == RarityType.Mythic)
+            return MythicMult;
+        else if (rarity == RarityType.Ethereal)
+            return EtherealMult;
+        else if (rarity == RarityType.Cosmic)
+            return CosmicMult;
+        else if (rarity == RarityType.CommonPlus)
+            return CommonPlusMult;
+        else if (rarity == RarityType.RarePlus)
+            return RarePlusMult;
+        else if (rarity == RarityType.EpicPlus)
+            return EpicPlusMult;
+        else if (rarity == RarityType.LegendaryPlus)
+            return LegendaryPlusMult;
+        else if (rarity == RarityType.MythicPlus)
+            return MythicPlusMult;
+        else if (rarity == RarityType.EtherealPlus)
+            return EtherealPlusMult;
+        else if (rarity == RarityType.CosmicPlus)
+            return CosmicPlusMult;
+        else if (rarity == RarityType.SuperCommon)
+            return SuperCommonMult;
+        else if (rarity == RarityType.SuperRare)
+            return SuperRareMult;
+        else if (rarity == RarityType.SuperEpic)
+            return SuperEpicMult;
+        else if (rarity == RarityType.SuperLegendary)
+            return SuperLegendaryMult;
+        else if (rarity == RarityType.SuperMythic)
+            return SuperMythicMult;
+        else if (rarity == RarityType.SuperEthereal)
+            return SuperEtherealMult;
+        else
+            return SuperCosmicMult;
+
+    }
+
+    public static int GetGoldMult(RarityType rarity)
+    {
+        CheckHappyHour();
+
+        if (rarity == RarityType.Common)
+            return CommonMult;
+        else if (rarity == RarityType.Rare)
+            return RareMult;
+        else if (rarity == RarityType.Epic)
+            return EpicMult;
+        else if (rarity == RarityType.Legendary)
+            return LegendaryMult;
+        else if (rarity == RarityType.Mythic)
+            return MythicMult;
+        else if (rarity == RarityType.Ethereal)
+            return EtherealMult;
+        else if (rarity == RarityType.Cosmic)
+            return CosmicMult;
+        else if (rarity == RarityType.CommonPlus)
+            return CommonPlusGoldMult;
+        else if (rarity == RarityType.RarePlus)
+            return RarePlusGoldMult;
+        else if (rarity == RarityType.EpicPlus)
+            return EpicPlusGoldMult;
+        else if (rarity == RarityType.LegendaryPlus)
+            return LegendaryPlusGoldMult;
+        else if (rarity == RarityType.MythicPlus)
+            return MythicPlusGoldMult;
+        else if (rarity == RarityType.EtherealPlus)
+            return EtherealPlusGoldMult;
+        else if (rarity == RarityType.CosmicPlus)
+            return CosmicPlusGoldMult;
+        else if (rarity == RarityType.SuperCommon)
+            return SuperCommonGoldMult;
+        else if (rarity == RarityType.SuperRare)
+            return SuperRareGoldMult;
+        else if (rarity == RarityType.SuperEpic)
+            return SuperEpicGoldMult;
+        else if (rarity == RarityType.SuperLegendary)
+            return SuperLegendaryGoldMult;
+        else if (rarity == RarityType.SuperMythic)
+            return SuperMythicGoldMult;
+        else if (rarity == RarityType.SuperEthereal)
+            return SuperEtherealGoldMult;
+        else
+            return SuperCosmicGoldMult;
+
     }
 
     public static void LoadFromJson(string json)

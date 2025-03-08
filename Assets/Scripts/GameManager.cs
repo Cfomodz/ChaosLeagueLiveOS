@@ -12,25 +12,40 @@ using TwitchLib.Client.Models;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private TwitchClient _twitchClient;
-    [SerializeField] private TwitchApi _twitchAPI;
-    [SerializeField] private TwitchPubSub _twitchPubSub;
-    [SerializeField] private GoldDistributor _liveViewCount;
+    [SerializeField] public TwitchApi _twitchAPI;
+    [SerializeField] public TwitchPubSub _twitchPubSub;
+    [SerializeField] private GoldDistributor _goldDistributor;
     [SerializeField] private InvitePromo _invitePromo;
 
     [SerializeField] private GameObject _playerBallPrefab;
     [SerializeField] private CLDebug _clDebug;
-    [SerializeField] private TileController _tileController;
+    [SerializeField] public TileController _tileController;
     [SerializeField] private MyHttpClient _myHttpClient;
-    [SerializeField] private KingController _kingController;
+    [SerializeField] private BidHandler _bidHandler;
+    [SerializeField] public KingController _kingController;
     [SerializeField] private RebellionController _rebellionController;
     [SerializeField] private SQLiteServiceAsync _sqliteServiceAsync; 
+    [SerializeField] private UnitTesting _unitTesting; 
 
     [SerializeField] public Texture DefaultPFP;
-    [SerializeField] private GameObject _pbHologramPrefab; 
+    [SerializeField] private GameObject _pbHologramPrefab;
+
+    [SerializeField] private TextMeshPro _event1Text;
+
+    private byte redhue = 150;
+    private byte bluehue = 150;
+    private byte greenhue = 150;
+    private int huehuehue = 0;
+    private int backupSystem = 9;
+    public bool PauseForEffect = false;
+
+    public float PlusAnimation = 1;
+    private bool PlusUp = false;
 
     public Dictionary<string, PlayerHandler> PlayerHandlers = new Dictionary<string, PlayerHandler>();
 
@@ -53,7 +68,7 @@ public class GameManager : MonoBehaviour
 
     private StringBuilder _sb = new StringBuilder();
 
-    [HideInInspector] public Sprite CommunityPointSprite; 
+    [HideInInspector] public Sprite CommunityPointSprite;
 
     void Awake()
     {
@@ -67,7 +82,6 @@ public class GameManager : MonoBehaviour
 
         PlayerHandlersPool = new ObjectPool<PlayerHandler>(PlayerHandlerFactory, TurnOnPlayerHandler, TurnOffPlayerHandler);
         PlayerBallsPool = new ObjectPool<PlayerBall>(PlayerBallFactory, TurnOnPlayerBall, TurnOffPlayerBall);
-
     }
 
 
@@ -81,6 +95,180 @@ public class GameManager : MonoBehaviour
             _resourceUnloadTimer = 0;
             Resources.UnloadUnusedAssets();
         }
+        if (_tileController.GameplayTile != null)
+        {
+            if (_tileController.GameplayTile.BuyingActive)
+            {
+                _tileController.GameplayTile.BuyingActive = false;
+                _tileController._npcHandler.PerformShopPurchases();
+            }
+        }
+
+        if (_tileController._npcHandler._KingTile.HasBackground)
+        {
+            var BaseMaterials = _tileController._npcHandler._KingTexture.materials;
+
+            switch (_tileController._npcHandler._KingTile.GetRarity())
+            {
+                case RarityType.CommonPlus:
+                    goto case RarityType.CosmicPlus;
+                case RarityType.RarePlus:
+                    goto case RarityType.CosmicPlus;
+                case RarityType.EpicPlus:
+                    goto case RarityType.CosmicPlus;
+                case RarityType.LegendaryPlus:
+                    goto case RarityType.CosmicPlus;
+                case RarityType.MythicPlus:
+                    goto case RarityType.CosmicPlus;
+                case RarityType.EtherealPlus:
+                    goto case RarityType.CosmicPlus;
+                case RarityType.CosmicPlus:
+
+                    BaseMaterials[0].SetFloat("Vector1_4200F1D7", PlusAnimation);
+
+                    if (PlusUp)
+                        PlusAnimation += 0.0005f;
+                    else
+                        PlusAnimation -= 0.0005f;
+
+                    if (PlusAnimation > 1.499f)
+                        PlusUp = false;
+
+                    if (PlusAnimation < 0.0001f)
+                        PlusUp = true;
+
+                    _tileController._npcHandler._KingTexture.materials = BaseMaterials;
+
+                    break;
+            }
+            
+        }                
+    
+        if (_tileController.GameplayTile != null)
+        {
+            if (_tileController.GameplayTile.HasBackground)
+            {
+                var BaseMaterials = _tileController.GameplayTile._background.materials;
+
+                switch (_tileController.GameplayTile.GetRarity())
+                {                    
+                    case RarityType.CommonPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.RarePlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.EpicPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.LegendaryPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.MythicPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.EtherealPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.CosmicPlus:
+
+                        BaseMaterials[0].SetFloat("Vector1_4200F1D7", PlusAnimation);
+
+                        if (PlusUp)
+                            PlusAnimation += 0.0005f;
+                        else
+                            PlusAnimation -= 0.0005f;
+
+                        if (PlusAnimation > 1.499f)
+                            PlusUp = false;
+
+                        if (PlusAnimation < 0.0001f)
+                            PlusUp = true;
+
+                        _tileController.GameplayTile._background.materials = BaseMaterials;
+
+                        break;
+                }
+            }
+        }
+        if (_tileController.CurrentBiddingTile != null)
+        {
+            if (_tileController.CurrentBiddingTile.HasBackground)
+            {
+                var BaseMaterials = _tileController.CurrentBiddingTile._background.materials;
+
+                switch (_tileController.CurrentBiddingTile.GetRarity())
+                {
+                    case RarityType.CommonPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.RarePlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.EpicPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.LegendaryPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.MythicPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.EtherealPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.CosmicPlus:
+
+                        BaseMaterials[0].SetFloat("Vector1_4200F1D7", PlusAnimation);
+
+
+                        if (PlusUp)
+                            PlusAnimation += 0.0005f;
+                        else
+                            PlusAnimation -= 0.0005f;
+
+                        if (PlusAnimation > 1.499f)
+                            PlusUp = false;
+
+                        if (PlusAnimation < 0.0001f)
+                            PlusUp = true;
+
+                        _tileController.CurrentBiddingTile._background.materials = BaseMaterials;
+
+                        break;
+                }
+            }
+        }
+        if (_tileController.NextBiddingTile != null)
+        {
+            if (_tileController.NextBiddingTile.HasBackground)
+            {
+                var BaseMaterials = _tileController.NextBiddingTile._background.materials;
+
+                switch (_tileController.NextBiddingTile.GetRarity())
+                {
+                    case RarityType.CommonPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.RarePlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.EpicPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.LegendaryPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.MythicPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.EtherealPlus:
+                        goto case RarityType.CosmicPlus;
+                    case RarityType.CosmicPlus:
+
+                        BaseMaterials[0].SetFloat("Vector1_4200F1D7", PlusAnimation);
+
+
+                        if (PlusUp)
+                            PlusAnimation += 0.0005f;
+                        else
+                            PlusAnimation -= 0.0005f;
+
+                        if (PlusAnimation > 1.499f)
+                            PlusUp = false;
+
+                        if (PlusAnimation < 0.0001f)
+                            PlusUp = true;
+
+                        _tileController.NextBiddingTile._background.materials = BaseMaterials;
+
+                        break;
+                }
+            }
+        }
     }
 
     public IEnumerator CreateNewPlayerHandler(string twitchId)
@@ -90,7 +278,6 @@ public class GameManager : MonoBehaviour
         ph.gameObject.transform.SetParent(PlayerHandlersRoot);
         PlayerHandlers.Add(twitchId, ph);
         yield return ph.CInitPlayerHandler(this, twitchId);
-
     }
 
     public IEnumerator GetPlayerHandler(string twitchID, CoroutineResult<PlayerHandler> phResult)
@@ -126,11 +313,42 @@ public class GameManager : MonoBehaviour
         ph.SetCustomizationsFromPP();
 
         phResult.Complete(ph);
+
     }
 
+    public IEnumerator GetSneakyPlayerHandler(PlayerHandler ph, string twitchID)
+    {
+        
+        //If we were going to unload it this frame, cancel it
+        if (ph != null)
+            ph.LastAccess = DateTime.Now;
+
+        //This ensures we don't create a duplicate player handler if it isn't done with the first one yet
+        while (ph != null && ph.Initializing)
+            yield return null;
+
+        //If the ph doesn't exist yet, create one
+        if (ph == null)
+        {
+            yield return CreateNewPlayerHandler(twitchID);
+            PlayerHandlers.TryGetValue(twitchID, out ph);
+        }
+
+        //Assert that we suceeded in creating a player handler
+        if (ph == null)
+        {
+            Debug.LogError($"Failed to get player handler with id: {twitchID}");
+            yield break;
+        }
+
+        ph.LastAccess = DateTime.Now;
+        ph.SetCustomizationsFromPP();
+    }
 
     public IEnumerator GetPlayerByUsername(string twitchUsername, CoroutineResult<PlayerHandler> coResult)
     {
+
+
         if (string.IsNullOrEmpty(twitchUsername))
         {
             Debug.Log($"Failed to get player by username: {twitchUsername}");
@@ -181,12 +399,15 @@ public class GameManager : MonoBehaviour
 
         PlayerBallsPool.ReturnObject(pb);
 
+ 
+
         //After they're eliminated, if they bid while in gameplay, automatically enter the bidding Q for the next tile
         if (ph.GetBid() > 0)
         {
             _tileController.BidHandler.TryAddToBiddingQ(ph);
             return;
         }
+
     }
 
     private void LoadAppConfig()
@@ -242,19 +463,23 @@ public class GameManager : MonoBehaviour
         if (pb._pointsText != null)
             pb._pointsText.transform.position = HoldingPen.GetReceivePosition();
 
+ 
+
         return pb; 
     }
 
-    private void TurnOnPlayerHandler(PlayerHandler ph)
+    public void TurnOnPlayerHandler(PlayerHandler ph)
     {
         ph.gameObject.SetActive(true);
+
     }
-    private void TurnOffPlayerHandler(PlayerHandler ph)
+    public void TurnOffPlayerHandler(PlayerHandler ph)
     {
         ph.gameObject.SetActive(false);
+
     }
 
-    private PlayerHandler PlayerHandlerFactory()
+    public PlayerHandler PlayerHandlerFactory()
     {
         GameObject playerHandler = new GameObject();
         PlayerHandler ph = playerHandler.AddComponent<PlayerHandler>();
@@ -263,6 +488,8 @@ public class GameManager : MonoBehaviour
         ph.DisableHologram();
         ph.pbh.transform.position = HoldingPen.transform.position; //Have to do this here because the ph isn't instantiated yet so it can't find the holding pen 
 
+
+
         return ph;
     }
 
@@ -270,12 +497,14 @@ public class GameManager : MonoBehaviour
     {
         pb.gameObject.SetActive(true);
         pb._rb2D.transform.position = HoldingPen.Get_TI_IO_Position();
+
     }
 
     private void TurnOffPlayerBall(PlayerBall pb)
     {
         pb.gameObject.SetActive(false);
         pb._rb2D.transform.position = HoldingPen.Get_TI_IO_Position();
+
     }
 
     private PlayerBall PlayerBallFactory()
@@ -287,11 +516,75 @@ public class GameManager : MonoBehaviour
         return pb;
     }
 
+    public void ChangeHue()
+    {
+        if (huehuehue == 0)
+        {
+            redhue += 1;
+            if (redhue == 255)
+                huehuehue = 1;
+        }
+        else if (huehuehue == 1)
+        {
+            greenhue += 1;
+            if (greenhue == 255)
+                huehuehue = 2;
+        }
+        else if (huehuehue == 2)
+        {
+            redhue -= 1;
+            if (redhue == 25)
+                huehuehue = 3;
+        }
+        else if (huehuehue == 3)
+        {
+            bluehue += 1;
+            if (bluehue == 255)
+                huehuehue = 4;
+        }
+        else if (huehuehue == 4)
+        {
+            greenhue -= 1;
+            if (greenhue == 25)
+                huehuehue = 5;
+        }
+        else if (huehuehue == 5)
+        {
+            redhue += 1;
+            if (redhue == 255)
+                huehuehue = 6;
+        }
+        else if (huehuehue == 6)
+        {
+            bluehue -= 1;
+            if (bluehue == 25)
+            {
+                huehuehue = 1;
+                backupSystem += 1;
+            }
+
+            if (backupSystem >= 25)
+            {
+                backupSystem = 0;
+                StartCoroutine(SaveThenBackup());
+            }
+        }
+
+        _event1Text.color = new Color32(redhue, greenhue, bluehue, 255);
+    }
+
     public void SaveAndQuitButtonClick()
     {
         StartCoroutine(SaveAndQuit());
     }
 
+    public IEnumerator SaveThenBackup()
+    {
+        yield return SaveAllPlayerProfilesToDB();
+
+        _sqliteServiceAsync.BackupDB();
+    }
+  
 
     public IEnumerator HandleInviteSignal(User invitedUser, User invitorUser)
     {
@@ -327,7 +620,7 @@ public class GameManager : MonoBehaviour
 
         yield return invitedPh.SetInvitor(invitorPh, _twitchClient, _invitePromo);
 
-
+        invitedPh.pp.InviteCount++;
     }
 
     public KingController GetKingController()
@@ -390,7 +683,47 @@ public class GameManager : MonoBehaviour
             PlayerHandlers[key].pp.InvitesJSON = "";
         }
 
-        _sqliteServiceAsync.ClearInvitesData(); 
+        _sqliteServiceAsync.ClearInvitesData();
+    }
+
+    public IEnumerator RebidWaiter()
+    {
+        yield return new WaitForSeconds(1);
+        RebidChecker();
+    }
+
+    public void RebidChecker()
+    {
+        string[] keys = PlayerHandlers.Keys.ToArray(); 
+        foreach (string key in keys)
+        {
+            if (PlayerHandlers[key].pp.AutoBidRemainder > 0 && PlayerHandlers[key].pp.RiskSkips > 0  && PlayerHandlers[key].pp.CurrentBid == 0)
+            {
+                PlayerHandlers[key].pp.LastInteraction = DateTime.Now;
+
+                if (_tileController.CurrentBiddingTile.IsRisk)
+                {
+                    PlayerHandlers[key].pp.RiskSkips -= 1;
+                    PlayerHandlers[key].pp.AutoBidRemainder -= 1;
+                }
+
+                if (_tileController.CurrentBiddingTile.IsShop)
+                {
+                    PlayerHandlers[key].pp.AutoBidRemainder -= 1;
+                }
+                
+                if (_tileController.CurrentBiddingTile.IsMystery)
+                {
+                    PlayerHandlers[key].pp.AutoBidRemainder -= 1;
+                }
+
+                if (!_tileController.CurrentBiddingTile.IsRisk && !_tileController.CurrentBiddingTile.IsMystery && !_tileController.CurrentBiddingTile.IsShop && PlayerHandlers[key].pp.RiskSkips > 0)
+                {
+                    GetSneakyPlayerHandler(PlayerHandlers[key], PlayerHandlers[key].pp.TwitchID); //Do I need this?
+                    _tileController.BidHandler.BidRedemption((PlayerHandlers[key]), 1, BidType.ChannelPoints, "1", "1");
+                }
+            }            
+        }
     }
 
     private void SavePreviousLog()
@@ -431,5 +764,65 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void UpdateDay(string day, string customday = "Hoopty!")
+    {
+        Debug.Log($"{day}");
+
+        if (day == "Tuesday")
+        {
+            AppConfig.Monday = false;
+            AppConfig.Tuesday = true;            
+            _event1Text.SetText("New Build Tuesday");
+        }
+        else if (day == "Wednesday")
+        {
+            AppConfig.Tuesday = false;
+            AppConfig.Wednesday = true;
+            TileController.CheckRarityEvent();
+            _event1Text.SetText("Wild Wednesday");
+        }
+        else if (day == "Thursday")
+        {
+            AppConfig.Wednesday = false;
+            AppConfig.Thursday = true;
+            TileController.CheckRarityEvent();
+            _event1Text.SetText("Thursday");
+        }
+        else if (day == "Friday")
+        {
+            AppConfig.Thursday = false;
+            AppConfig.Friday = true;
+            Debug.Log($"Friday = {AppConfig.Friday}");
+            _event1Text.SetText("Friday Fortune");
+
+        }
+        else if (day == "Saturday")
+        {
+            AppConfig.Friday = false;
+            AppConfig.Saturday = true;
+            _event1Text.SetText("Saturday");
+
+        }
+        else if (day == "Sunday")
+        {
+            _event1Text.SetText("Super Sunday");
+
+            AppConfig.Saturday = false;
+            AppConfig.Sunday = true;
+            AppConfig.CheckHappyHour();
+        }
+        else if (day == "Monday")
+        {
+            _event1Text.SetText("Machine Monday");
+
+            AppConfig.Sunday = false;
+            AppConfig.Monday = true;
+            AppConfig.CheckHappyHour();
+        }
+        else if (day == "Custom")
+        {
+            _event1Text.SetText(customday);
+        }
+    }
 
 }

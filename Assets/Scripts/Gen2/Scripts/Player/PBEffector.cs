@@ -15,7 +15,12 @@ public enum PBEffect
     Divide = 8,
     Subtract = 16,
     Zero = 32,
-    Implode = 64
+    Implode = 64,
+    Sapphire = 128,
+    Emerald = 256,
+    Diamond = 512,
+    Ruby = 1024,
+    Gold = 2048
 }
 
 public class PBEffector : MonoBehaviour, TravelingIndicatorIO
@@ -44,6 +49,7 @@ public class PBEffector : MonoBehaviour, TravelingIndicatorIO
     [SerializeField] private List<MeshRenderer> _logicColor;
     [SerializeField] private EffectorLogic _triggerLogic;
     [SerializeField] private float _logicValue = 1;
+    private float innerLogic = 1;
 
     [SerializeField] private MaterialPropertyBlock _logicPropBlock;
     private float RGB_t;
@@ -85,7 +91,7 @@ public class PBEffector : MonoBehaviour, TravelingIndicatorIO
 
     public void Init(PBEffect effect, int value, int maxHp = -1)
     {
-        gameObject.SetActive(true); 
+        gameObject.SetActive(true);
 
         SetEffect(effect, false); 
         SetCurrValue(value, false);
@@ -110,6 +116,8 @@ public class PBEffector : MonoBehaviour, TravelingIndicatorIO
         OverlappingZones.Clear();
 
         ResetHealth();
+
+        innerLogic = _logicValue;
 
         gameObject.SetActive(true); 
         
@@ -156,8 +164,10 @@ public class PBEffector : MonoBehaviour, TravelingIndicatorIO
     }
     public void NthTriangleCurrValue()
     {
-        _logicValue++;
-        IncrementCurrValue(_logicValue); 
+        innerLogic++;
+        IncrementCurrValue(innerLogic);
+        //_logicValue++;
+        //IncrementCurrValue(_logicValue); 
     }
 
     public int GetZoneMultiplier()
@@ -200,26 +210,39 @@ public class PBEffector : MonoBehaviour, TravelingIndicatorIO
         (Color meshColor, Color _labelColor) = _colorMap.GetColors((long)GetZoneMultiplyAppliedValue(), _effect);
         if (_colorByValue)
         {
-            if (_effect.HasFlag(PBEffect.Explode) && ! _effect.HasFlag(PBEffect.Add))
+            if (_effect.HasFlag(PBEffect.Explode) && !_effect.HasFlag(PBEffect.Add))
             {
                 meshColor = Color.grey;
             }
             if (_effect.HasFlag(PBEffect.Zero))
             {
-                if (GetZoneMultiplier() > 0)
+                if (GetZoneMultiplyAppliedValue() < 0)
+                    meshColor = Color.red;
+                else if (GetZoneMultiplier() > 0)
                     meshColor = Color.green;
                 else
                     meshColor = Color.red;
             }
             if (_effect.HasFlag(PBEffect.Multiply))
             {
-                meshColor = Color.cyan;
-                _labelColor = Color.black;
+                if (GetZoneMultiplyAppliedValue() < 0)
+                    meshColor = Color.red;
+                else if (GetZoneMultiplyAppliedValue() < 1)
+                    meshColor = MyColors.Orange;
+                else
+                {
+                    meshColor = Color.cyan;
+                    _labelColor = Color.black;
+                }
             }
             if (_effect.HasFlag(PBEffect.Divide))
             {
-                meshColor = MyColors.Orange;
-                _labelColor = Color.black;
+                if (GetZoneMultiplyAppliedValue() < 0)
+                    meshColor = Color.red;
+                else if (GetZoneMultiplier() > 0)
+                    meshColor = Color.green;
+                else
+                    meshColor = MyColors.Orange;
             }
             if (_effect.HasFlag(PBEffect.Subtract))
             {
@@ -234,6 +257,7 @@ public class PBEffector : MonoBehaviour, TravelingIndicatorIO
             //Debug.Log($"Setting matPropBlock to {meshColor.ColorToHexString()} in {this.name}"); 
             _materialPropertyBlock.SetColor("_MyBaseColor", meshColor);
             _meshRenderer.SetPropertyBlock(_materialPropertyBlock);
+                        
             _textLabel.color = _labelColor;
         }
 
@@ -253,7 +277,6 @@ public class PBEffector : MonoBehaviour, TravelingIndicatorIO
             return;
 
         _materialPropertyBlock.SetColor("_MyBaseColor", meshColor.WithAlpha(CurrentHP / (float)_maxHP));
-        _meshRenderer.SetPropertyBlock(_materialPropertyBlock);
     }
 
     public Color GetMeshColor()
@@ -323,7 +346,7 @@ public class PBEffector : MonoBehaviour, TravelingIndicatorIO
                 pb.ExplodeBall();
             }
         }
-        if (effect.HasFlag(PBEffect.Divide))
+        if (effect.HasFlag(PBEffect.Divide) && GetZoneMultiplier() <= 0)
         {
             SendToKing(pb, pb.Ph.pp.SessionScore / (long)value / 2);
             pb.Ph.DividePoints(value, textPopup: true, textPopupDirection);
@@ -335,7 +358,7 @@ public class PBEffector : MonoBehaviour, TravelingIndicatorIO
             SendToKing(pb, (long)value / 2);
             pb.Ph.SubtractPoints((long)value, canKill: false, createTextPopup: true, textPopupDirection);
         }
-        if (effect.HasFlag(PBEffect.Zero) && GetZoneMultiplier() <= 0)
+        if (effect.HasFlag(PBEffect.Zero) && (GetZoneMultiplier() <= 0 || value <= 0))
         {
             SendToKing(pb, pb.Ph.pp.SessionScore / 2);
             pb.Ph.ZeroPoints(kill: false, true, textPopupDirection);
@@ -350,6 +373,27 @@ public class PBEffector : MonoBehaviour, TravelingIndicatorIO
         }
         else if (effect.HasFlag(PBEffect.Implode))
             pb.ExplodeBall(true);
+        if (effect.HasFlag(PBEffect.Sapphire))
+        {
+            pb.Ph.AddGems((long)value, true, Vector3.up, "Sapphire");
+        }
+        if (effect.HasFlag(PBEffect.Emerald))
+        {
+            pb.Ph.AddGems((long)value, true, Vector3.up, "Emerald");
+        }
+        if (effect.HasFlag(PBEffect.Diamond))
+        {
+            pb.Ph.AddGems((long)value, true, Vector3.up, "Diamond");
+        }
+        if (effect.HasFlag(PBEffect.Ruby))
+        {
+            pb.Ph.AddGems((long)value, true, Vector3.up, "Ruby");
+        }
+        if (effect.HasFlag(PBEffect.Gold))
+        {
+            pb.Ph.AddGems((long)value, true, Vector3.up, "Gold");
+        }
+
     }
 
     private void SendToKing(PlayerBall pb, long amount)
