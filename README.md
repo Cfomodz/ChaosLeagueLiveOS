@@ -45,6 +45,21 @@ Quick setup:
 
 The parser supports quoted arguments, for example: `!spawn "big boss" 3`.
 
+## Chat Pickaxe Mini-game
+
+A tiny chat-controlled falling pickaxe demo lives in `Assets/ChatPickaxe`.
+Open `Assets/ChatPickaxe/Scenes/ChatPickaxeScene.unity` and press Play.
+
+Commands:
+
+- `!left` / `!right` to slide the pickaxe
+- `!drop` to drop one cell
+- `!restart` to reset the mine
+
+The current build uses runtime-generated pixel sprites. See
+`Assets/ChatPickaxe/Docs/ChatPickaxeAssets.md` for the list of pixel art
+assets to create for final polish.
+
 ## Contribute
 
 Please read the CONTRIBUTING.md file (TODO) for how you can contribute to this project and what is important.
